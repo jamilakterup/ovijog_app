@@ -2,6 +2,9 @@ import PropTypes from "prop-types";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 
+import reloadimg from "../../../assets/captcha.png";
+import { LoadCanvasTemplateNoReload } from "react-simple-captcha";
+
 function ComplainForm({
   offices,
   hideInfo,
@@ -10,7 +13,22 @@ function ComplainForm({
   setInputValue,
   setSelectedOffice,
   complainSubmit,
+  reloadCaptcha,
+  handleCaptchaChange,
+  captchaError
 }) {
+
+
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+  //   if (validateCaptcha(captchaValue)) {
+  //     complainSubmit(event);
+  //     setCaptchaError(false);
+  //   } else {
+  //     setCaptchaError(true);
+  //   }
+  // };
+
   return (
     <section className="container mx-auto md:px-5 px-4 my-8">
       <hr className="border border-black mt-12" />
@@ -115,7 +133,7 @@ function ComplainForm({
                   id="complainer_info"
                   name="complainer_info"
                   className="bg-gray-50 border border-gray-300 text-gray-900 custom-font rounded-lg focus:ring-black-500 focus:border-black-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-black-500 dark:focus:border-black-500"
-                  placeholder="নাম ও মোবাইল নাম্বার"
+                  placeholder="নাম, মোবাইল নাম্বার, ঠিকানা..."
                 ></input>
               </div>
             </div>
@@ -155,9 +173,7 @@ function ComplainForm({
                   <TextField
                     {...params}
                     label={
-                      <span className="custom-font">
-                        দপ্তর নির্বাচন করুন
-                      </span>
+                      <span className="custom-font">দপ্তর নির্বাচন করুন</span>
                     }
                     sx={{ width: "100%" }}
                   />
@@ -165,7 +181,26 @@ function ComplainForm({
               />
             </div>
 
-            <div className="flex items-center justify-end py-2 dark:border-gray-600 mt-8">
+            <div className="mt-6 border border-gray-200/80 bg-gray-100/60 rounded-md p-3">
+              {/* <LoadCanvasTemplate /> */}
+              <div className="mb-2 flex gap-3">
+                <LoadCanvasTemplateNoReload />
+
+                <img src={reloadimg} alt="reload-captcha-image" className="w-9 h-9" onClick={()=>reloadCaptcha()} />
+              </div>
+              <input
+                type="text"
+                className="border border-gray-400 rounded-sm"
+                placeholder="Enter Captcha Value"
+                onChange={handleCaptchaChange}
+                required
+              />
+              {captchaError && (
+                <span className="text-red-500">Captcha is incorrect. Please try again.</span>
+              )}
+            </div>
+
+            <div className="flex items-center justify-end py-2 dark:border-gray-600 mt-5">
               <button
                 type="submit"
                 className="custom-bold-font md:text-[16px] py-3.5 px-4 text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800 w-full text-center"
@@ -194,6 +229,9 @@ ComplainForm.propTypes = {
   selectedOffice: PropTypes.object,
   setSelectedOffice: PropTypes.func.isRequired,
   complainSubmit: PropTypes.func.isRequired,
+  reloadCaptcha: PropTypes.func.isRequired,
+  handleCaptchaChange: PropTypes.func.isRequired,
+  captchaError: PropTypes.bool.isRequired,
 };
 
 export default ComplainForm;

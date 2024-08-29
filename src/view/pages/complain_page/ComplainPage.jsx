@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import ComplainForm from "./ComplainForm";
+import { loadCaptchaEnginge, validateCaptcha } from "react-simple-captcha";
 
 function ComplainPage() {
   const [offices, setOffices] = useState([]);
   const [hideInfo, setHideInfo] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [selectedOffice, setSelectedOffice] = useState(null);
+  const [captchaValue, setCaptchaValue] = useState("");
+  const [captchaError, setCaptchaError] = useState(false);
 
   useEffect(() => {
     const fetchOffices = async () => {
@@ -30,6 +33,19 @@ function ComplainPage() {
     }
   }, [hideInfo]);
 
+  useEffect(() => {
+    loadCaptchaEnginge(6);
+  }, []);
+
+  const reloadCaptcha = () => {
+    loadCaptchaEnginge(6);
+  };
+
+  const handleCaptchaChange = (event) => {
+    setCaptchaValue(event.target.value);
+  };
+
+  // submit the form on database
   const complainSubmit = async (event) => {
     event.preventDefault();
 
@@ -71,6 +87,14 @@ function ComplainPage() {
     );
 
     try {
+
+      if (validateCaptcha(captchaValue)) {
+        setCaptchaError(false);
+      } else {
+        setCaptchaError(true);
+        return;
+      }
+      
       const response = await fetch("http://10.106.15.243/api/complaints/", {
         method: "POST",
         body: formData,
@@ -80,8 +104,12 @@ function ComplainPage() {
         throw new Error("Network response was not ok");
       }
 
+
       const result = await response.json();
-      console.log("Success:", result);
+      if (result) {
+        console.log('success')
+      }
+      // console.log("Success:", result);
       // Handle success (e.g., show a success message, redirect, etc.)
     } catch (error) {
       console.error("Error:", error);
@@ -98,6 +126,10 @@ function ComplainPage() {
       setInputValue={setInputValue}
       setSelectedOffice={setSelectedOffice}
       complainSubmit={complainSubmit}
+      reloadCaptcha={reloadCaptcha}
+      handleCaptchaChange={handleCaptchaChange}
+      captchaValue={captchaValue}
+      captchaError={captchaError}
     />
   );
 }
