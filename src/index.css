@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@font-face{
+        font-family: 'BCC_regular';
+        src: url('/src/font/BCC_regular.ttf');
+}
+
+@font-face{
+        font-family: 'BCC_bold';
+        src: url('/src/font/BCC_bold.ttf');
+}
+
+.custom-font {
+    font-family: 'BCC_regular', sans-serif;
+  }
+
+.custom-bold-font {
+    font-family: 'BCC_bold', sans-serif;
+  }
