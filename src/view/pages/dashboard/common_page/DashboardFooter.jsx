@@ -1,7 +1,7 @@
 
 function DashboardFooter() {
     return (
-        <footer className="bg-white dark:bg-gray-900 border-t border-slate-400 dark:border-slate-900">
+        <footer className="bg-white dark:bg-gray-900 border-t border-slate-200 dark:border-slate-900">
             <div className="w-full max-w-screen-xl mx-auto p-4 md:py-6">
                 <div className="sm:flex sm:items-center sm:justify-between">
                     <a href="https://flowbite.com/" className="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse">

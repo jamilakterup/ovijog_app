@@ -1,10 +1,49 @@
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import CommentIcon from "@mui/icons-material/Comment";
+import PropTypes from "prop-types";
 
 function SideNav({ isOpen }) {
   return (
-    <div className={`bg-slate-400 dark:bg-slate-900 absolute top-18 left-0 min-h-full transition-all ease-in-out ${isOpen ? "w-16 overflow-hidden" : "w-[200px]"}`}>
-      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eaque eos molestiae optio placeat minus voluptas obcaecati, asperiores mollitia magnam! Saepe mollitia quod iure nesciunt dolores unde optio delectus cum ea?
-    </div>
-  )
+    <>
+      <a
+        href="/dashboard/home"
+        className={`${
+          !isOpen ? "w-60" : "w-10"
+        } flex group items-center gap-5 transition-all ease-in-out p-2 hover:bg-slate-200 rounded-lg relative`}
+      >
+        <DashboardIcon />
+        {!isOpen ? (
+          "Dashboard"
+        ) : (
+          <span className="absolute bg-slate-500 text-white p-1 rounded-lg left-10 top-3 hidden group-hover:block z-10">
+            Dashboard
+          </span>
+        )}
+      </a>
+
+      <a
+        href="/dashboard/complain-table"
+        className={`${
+          !isOpen ? "w-60" : "w-10"
+        } flex group items-center gap-5 transition-all ease-in-out p-2 hover:bg-slate-200 rounded-lg relative`}
+      >
+        <CommentIcon />
+        {!isOpen ? (
+          "Complains"
+        ) : (
+          <span className="absolute bg-slate-500 text-white p-1 rounded-lg left-10 top-3 hidden group-hover:block z-10">
+            Complains
+          </span>
+        )}
+      </a>
+
+    </>
+  );
 }
+
+// Define PropTypes for SideNav
+SideNav.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+};
 
 export default SideNav;

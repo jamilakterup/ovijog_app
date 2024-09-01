@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import ComplainerLayout from "../layouts/ComplainerLayout";
 import DashboardLayout from "../layouts/DashboardLayout";
 import HomePage from "../pages/dashboard/HomePage";
+import ComplainTable from "../pages/dashboard/complain/ComplainTable";
 
 const router = createBrowserRouter([
     {
@@ -10,13 +11,17 @@ const router = createBrowserRouter([
         errorElement: '404'
     },
     {
-        path: '/dashboard/home',
+        path: '/dashboard',
         element: <DashboardLayout />,
         errorElement: '404',
         children: [
             {
-                path: '/dashboard/home',
+                path: 'home',
                 element: <HomePage />
+            },
+            {
+                path:'complain-table',
+                element: <ComplainTable />
             }
         ]
     }

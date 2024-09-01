@@ -11,12 +11,14 @@ function DashboardLayout() {
     <div>
       <DashboardNav isOpen={isOpen} setIsOpen={setIsOpen} />
 
-      <div className="min-h-[calc(100vh-153px)]">
-        <SideNav isOpen={isOpen} />
-
-        <div className={`w-full transition-all ease-in-out ${isOpen ? "md:ps-20" : "md:ps-56"}`}>
-          <Outlet />
+      <div className="flex min-h-[calc(100vh-153px)]">
+        <div className={`${
+            !isOpen ? "w-60" : "w-10"
+          } transition-all ease-in-out bg-slate-100`}>
+            <SideNav isOpen={isOpen}/>
         </div>
+
+        <Outlet />
       </div>
 
       <DashboardFooter />
