@@ -1,16 +1,20 @@
 import { Outlet } from "react-router-dom";
 import SideNav from "../pages/dashboard/common_page/SideNav";
 import DashboardFooter from "../pages/dashboard/common_page/DashboardFooter";
+import DashboardNav from "../pages/dashboard/common_page/DashboardNav";
+import { useState } from "react";
 
 function DashboardLayout() {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <div>
-      <div className="flex gap-4 min-h-[calc(100vh-11rem)]">
-        <div className="w-[180px]">
-          <SideNav />
-        </div>
+      <DashboardNav isOpen={isOpen} setIsOpen={setIsOpen} />
 
-        <div className="w-full">
+      <div className="min-h-[calc(100vh-153px)]">
+        <SideNav isOpen={isOpen} />
+
+        <div className={`w-full transition-all ease-in-out ${isOpen ? "md:ps-20" : "md:ps-56"}`}>
           <Outlet />
         </div>
       </div>

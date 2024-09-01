@@ -19,22 +19,13 @@ function ComplainForm({
 }) {
 
 
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   if (validateCaptcha(captchaValue)) {
-  //     complainSubmit(event);
-  //     setCaptchaError(false);
-  //   } else {
-  //     setCaptchaError(true);
-  //   }
-  // };
-
   return (
     <section className="container mx-auto md:px-5 px-4 my-8">
-      <hr className="border border-black mt-12" />
-      <h2 className="custom-bold-font text-3xl font-medium text-center -mt-4 bg-white w-[350px] mx-auto mb-10 text-violet-800">
+      <hr className="border border-black dark:border-cyan-700 mt-12" />
+      <h2 className="custom-bold-font text-3xl font-medium text-center -mt-4 bg-white dark:bg-slate-900 w-[350px] mx-auto mb-10 text-violet-800">
         নাগরিক অভিযোগ দাখিল ফরম
       </h2>
+
       <form onSubmit={(event) => complainSubmit(event)}>
         <div className="grid md:grid-cols-3 md:gap-10">
           {/* left div */}
@@ -50,7 +41,7 @@ function ComplainForm({
                 type="text"
                 id="complain_title"
                 name="complain_title"
-                className="custom-font md:text-[16px] bg-gray-50  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-black-500 focus:border-black-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-black-500 dark:focus:border-black-500"
+                className="custom-font md:text-[16px]  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-black-500 focus:border-black-500 block w-full p-2.5 dark:bg-gray-700  dark:placeholder-gray-400 dark:text-white dark:focus:ring-black-500 dark:focus:border-black-500 bg-gray-50 dark:hover:bg-gray-800  hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500"
                 placeholder="অভিযোগের বিষয় লিখুন..."
                 required
               />
@@ -68,7 +59,7 @@ function ComplainForm({
                 id="complain_details"
                 name="complain_details"
                 rows="4"
-                className="custom-font md:text-[16px] block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="custom-font md:text-[16px] block p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500"
                 placeholder="অভিযোগ সম্পর্কিত বিস্তারিত লিখুন..."
               ></textarea>
             </div>
@@ -116,7 +107,7 @@ function ComplainForm({
 
           {/* right div */}
           <div>
-            <div className="w-full mb-4 bg-white dark:bg-gray-700 dark:border-gray-600">
+            <div className="w-full mb-4">
               <div>
                 <label
                   htmlFor="complainer_info"
@@ -132,7 +123,7 @@ function ComplainForm({
                   type="text"
                   id="complainer_info"
                   name="complainer_info"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 custom-font rounded-lg focus:ring-black-500 focus:border-black-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-black-500 dark:focus:border-black-500"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 custom-font rounded-lg focus:ring-black-500 focus:border-black-500 block w-full p-2 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-black-500 dark:focus:border-black-500 dark:hover:bg-gray-800 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500"
                   placeholder="নাম, মোবাইল নাম্বার, ঠিকানা..."
                 ></input>
               </div>
@@ -163,7 +154,7 @@ function ComplainForm({
               </span>
             )}
 
-            <div className="w-full">
+            <div className="w-full rounded-md bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500">
               <Autocomplete
                 disablePortal
                 options={offices}
@@ -173,20 +164,32 @@ function ComplainForm({
                   <TextField
                     {...params}
                     label={
-                      <span className="custom-font">দপ্তর নির্বাচন করুন</span>
+                      <span className="custom-font dark:text-gray-400">দপ্তর নির্বাচন করুন</span>
                     }
-                    sx={{ width: "100%" }}
+                    sx={{
+                      width: "100%",
+                      "& .MuiOutlinedInput-root": {
+                        "& fieldset": {
+                          borderColor: "gray", // Sets the default border color
+                          opacity: 0.3
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "gray", // Sets the border color on hover
+                          opacity: 0.7
+                        }
+                      },
+                    }}
                   />
                 )}
               />
             </div>
 
-            <div className="mt-6 border border-gray-200/80 bg-gray-100/60 rounded-md p-3">
+            <div className="mt-6 border border-gray-200/80 bg-gray-100/60 dark:bg-gray-700 dark:border-gray-600 rounded-md p-3">
               {/* <LoadCanvasTemplate /> */}
               <div className="mb-2 flex gap-3">
                 <LoadCanvasTemplateNoReload />
 
-                <img src={reloadimg} alt="reload-captcha-image" className="w-9 h-9" onClick={()=>reloadCaptcha()} />
+                <img src={reloadimg} alt="reload-captcha-image" className="w-9 h-9" onClick={() => reloadCaptcha()} />
               </div>
               <input
                 type="text"
