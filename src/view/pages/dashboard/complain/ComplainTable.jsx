@@ -101,7 +101,7 @@ function ComplainTable() {
 
   const fetchComplaintData = async (id) => {
     try {
-      const response = await fetch(`http://114.130.119.192/api/complaints/${id}/`);
+      const response = await fetch(`http://10.106.15.243/api/complaints/${id}/`);
       const data = await response.json();
       setComplaintData(data);
       setModalOpen(true);
@@ -113,7 +113,7 @@ function ComplainTable() {
 
   useEffect(() => {
     // Fetch data from the API
-    fetch('http://114.130.119.192/api/complaints/')
+    fetch('http://10.106.15.243/api/complaints/')
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');

@@ -241,7 +241,6 @@ function ComplainForm({
             }
 
             <div className="mt-6 border border-gray-200/80 bg-gray-100/60 dark:bg-gray-700 dark:border-gray-600 rounded-md p-3">
-              {/* <LoadCanvasTemplate /> */}
               <div className="mb-2 flex gap-3">
                 <LoadCanvasTemplateNoReload />
 

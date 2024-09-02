@@ -28,7 +28,7 @@ function ComplainPage() {
       formData.append('paragraph ', value);
 
       // Replace with your API endpoint
-      const response = await fetch("https://114.130.116.176/generate-subject/", {
+      const response = await fetch("http://114.130.116.176/generate-subject/", {
         method: "POST",
         body: formData,
       });
@@ -75,11 +75,11 @@ function ComplainPage() {
   }, [hideInfo]);
 
   useEffect(() => {
-    loadCaptchaEnginge(6);
+    loadCaptchaEnginge(4);
   }, []);
 
   const reloadCaptcha = () => {
-    loadCaptchaEnginge(6);
+    loadCaptchaEnginge(4);
   };
 
   const handleCaptchaChange = (event) => {
@@ -137,7 +137,7 @@ function ComplainPage() {
         return;
       }
       
-      const response = await fetch("http://114.130.119.192/api/complaints/", {
+      const response = await fetch("http://10.106.15.243/api/complaints/", {
         method: "POST",
         body: formData,
       });
