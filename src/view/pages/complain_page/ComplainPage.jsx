@@ -5,10 +5,51 @@ import { loadCaptchaEnginge, validateCaptcha } from "react-simple-captcha";
 function ComplainPage() {
   const [offices, setOffices] = useState([]);
   const [hideInfo, setHideInfo] = useState(false);
+  const [officeName, setOfficeName] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [selectedOffice, setSelectedOffice] = useState(null);
   const [captchaValue, setCaptchaValue] = useState("");
   const [captchaError, setCaptchaError] = useState(false);
+  const [text, setText] = useState('');
+  const [summary, setSummary] = useState('');
+  const [title, setTitle] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const getSummary = async (event) => {
+    const value = event.target.value;
+    setText(value);
+
+    setLoading(true);
+    setError('');
+
+    try {
+      const formData = new FormData();
+      formData.append('paragraph ', value);
+
+      // Replace with your API endpoint
+      const response = await fetch("https://114.130.116.176/generate-subject/", {
+        method: "POST",
+        body: formData,
+      });
+
+      console.log('response',response)
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const result = await response.json();
+      if (result) {
+        console.log('success')
+      }
+
+    } catch (err) {
+      // setError('Failed to fetch summary. Please try again.',err);
+      console.log(err)
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const fetchOffices = async () => {
@@ -45,16 +86,17 @@ function ComplainPage() {
     setCaptchaValue(event.target.value);
   };
 
-  // submit the form on database
+  // submit the form on database:::::::
   const complainSubmit = async (event) => {
     event.preventDefault();
-
+  
     const target = event.target;
     const complain_title = target.complain_title.value;
     const complain_details = target.complain_details.value;
     const dropzone_file = target.dropzone_file.files[0]; // File object
     const complainer_info = target.complainer_info.value;
-
+    const custom_office_name = target.custom_office_name?.value || '';
+  
     // Validate file extension
     const validExtensions = ["jpg", "jpeg", "png", "pdf", "mp4", "3gp"];
     if (dropzone_file) {
@@ -65,7 +107,7 @@ function ComplainPage() {
         );
         return;
       }
-
+  
       // Optional: Validate file size (e.g., limit to 10MB)
       const maxSizeMB = 10;
       const maxSizeBytes = maxSizeMB * 1024 * 1024;
@@ -74,20 +116,20 @@ function ComplainPage() {
         return;
       }
     }
-
+  
     // Create FormData object
     const formData = new FormData();
     formData.append("title", complain_title);
     formData.append("content", complain_details);
     formData.append("file", dropzone_file); // Attach the file
     formData.append("complainer_info", complainer_info);
+    formData.append("type", custom_office_name);
     formData.append(
       "selected_office",
       selectedOffice ? selectedOffice.label : ""
     );
-
+  
     try {
-
       if (validateCaptcha(captchaValue)) {
         setCaptchaError(false);
       } else {
@@ -95,27 +137,26 @@ function ComplainPage() {
         return;
       }
       
-      const response = await fetch("http://10.106.15.243/api/complaints/", {
+      const response = await fetch("http://114.130.119.192/api/complaints/", {
         method: "POST",
         body: formData,
       });
-
+  
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-
-
+  
       const result = await response.json();
       if (result) {
-        console.log('success')
+        alert(`পরবর্তী আপডেট জানতে আপনার ট্র্যাকিং আইডি সংরক্ষণ করুন: ${result.tracking_id}`);
+        console.log('success', result);
       }
-      // console.log("Success:", result);
-      // Handle success (e.g., show a success message, redirect, etc.)
     } catch (error) {
       console.error("Error:", error);
       // Handle error (e.g., show an error message)
     }
   };
+  
 
   return (
     <ComplainForm
@@ -130,6 +171,16 @@ function ComplainPage() {
       handleCaptchaChange={handleCaptchaChange}
       captchaValue={captchaValue}
       captchaError={captchaError}
+      text={text}
+      setText={setText}
+      summary={summary}
+      title={title}
+      setTitle={setTitle}
+      loading={loading}
+      error={error}
+      getSummary={getSummary}
+      officeName={officeName}
+      setOfficeName={setOfficeName}
     />
   );
 }
