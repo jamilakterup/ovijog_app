@@ -12,7 +12,7 @@ const router = createBrowserRouter([
         errorElement: '404'
     },
     {
-        path: '/tracking_id',
+        path: '/tracking/:trackingId',
         element: <TrackingPage />,
         errorElement: '404'
     },

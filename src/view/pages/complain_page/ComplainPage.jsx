@@ -3,6 +3,7 @@ import ComplainForm from "./ComplainForm";
 import { loadCaptchaEnginge, validateCaptcha } from "react-simple-captcha";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+import axios from "axios";
 
 function ComplainPage() {
   const [offices, setOffices] = useState([]);
@@ -21,46 +22,98 @@ function ComplainPage() {
 
   const getSummary = async (event) => {
     const value = event.target.value;
-    setText(value);
+    setText(value); // Assuming setText is defined to handle the input state
 
     setLoading(true);
-    setError('');
+    setError(''); // Clear previous errors
 
     try {
+      // Prepare FormData with the input value
       const formData = new FormData();
-      formData.append('paragraph ', value);
-
-      // Replace with your API endpoint
+      formData.append("paragraph", value);
+      console.log(formData)
+      // Send the POST request with FormData
       const response = await fetch("http://114.130.116.176/generate-subject/", {
         method: "POST",
         body: formData,
+        headers: {
+          "Accept": "application/json",
+          'Access-Control-Allow-Origin': '*',
+          'access-control-allow-origin': 'localhost:5173',
+        }
       });
 
-      console.log('response', response)
+      // Check if the response is not OK
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
 
+      // Parse the response JSON
       const result = await response.json();
+
+      // Check if result is received and handle accordingly
       if (result) {
-        console.log('success')
+        console.log('Summary received:', result);
+        // Perform actions with the result if needed
       }
 
     } catch (err) {
-      // setError('Failed to fetch summary. Please try again.',err);
-      console.log(err)
+      // Handle and display error
+      setError('Failed to fetch summary. Please try again.');
+      console.error('Error:', err);
     } finally {
+      // Set loading to false after request completes
       setLoading(false);
     }
   };
+
+  // useEffect(() => {
+
+
+  //   const getTitle = async () => {
+  //     const formData = new FormData();
+  //     formData.append('paragraph', "some new text for testing");
+
+  //     try {
+  //       // const response = await fetch("http://114.130.116.176/generate-subject", {
+  //       //   method: "POST",
+  //       //   body: JSON.stringify({
+  //       //     "paragraph": "some new text for testing"
+  //       //   }),
+  //       //   headers: {
+  //       //     'Content-Type': 'application/json',
+  //       //   }
+  //       // })
+  //       // const response = await axios.post('http://114.130.116.176/generate-subject', formData, )
+  //       const response = axios.post('http://114.130.116.176/generate-subject', { "body": formData }, {
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //           'Access-Control-Allow-Origin': 'origin'
+  //         }
+  //       }
+  //       )
+  //       console.log('response is:', response);
+  //     }
+  //     catch (err) {
+  //       console.log(err)
+  //     }
+  //   }
+
+  //   if (text) {
+  //     getTitle()
+  //   }
+  // }, [text])
+
 
   useEffect(() => {
     const fetchOffices = async () => {
       try {
         const response = await fetch("http://114.130.119.192/api/offices/");
+
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
+
         const data = await response.json();
         setOffices(data);
       } catch (error) {
@@ -69,7 +122,7 @@ function ComplainPage() {
     };
 
     fetchOffices();
-  }, []);
+  }, [setOffices]);
 
   useEffect(() => {
     if (hideInfo) {
@@ -150,9 +203,9 @@ function ComplainPage() {
       }
 
       const result = await response.json();
+
       if (result) {
-        navigate('/tracking_id');
-        toast.success('Successfully toasted!');
+        navigate(`/tracking/${result.tracking_id}`);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -165,7 +218,6 @@ function ComplainPage() {
 
   return (
     <>
-      <Toaster />
       <ComplainForm
         offices={offices}
         hideInfo={hideInfo}

@@ -51,6 +51,8 @@ function ComplainForm({
                 id="complain_details"
                 name="complain_details"
                 rows="4"
+                value={text}
+                onChange={(event) => getSummary(event)}
                 className="custom-font md:text-[16px] block p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500"
                 placeholder="অভিযোগ সম্পর্কিত বিস্তারিত লিখুন..."
               ></textarea>
