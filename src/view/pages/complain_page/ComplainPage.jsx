@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import ComplainForm from "./ComplainForm";
 import { loadCaptchaEnginge, validateCaptcha } from "react-simple-captcha";
+import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 
 function ComplainPage() {
   const [offices, setOffices] = useState([]);
@@ -15,6 +17,7 @@ function ComplainPage() {
   const [title, setTitle] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const getSummary = async (event) => {
     const value = event.target.value;
@@ -33,7 +36,7 @@ function ComplainPage() {
         body: formData,
       });
 
-      console.log('response',response)
+      console.log('response', response)
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -54,7 +57,7 @@ function ComplainPage() {
   useEffect(() => {
     const fetchOffices = async () => {
       try {
-        const response = await fetch("http://10.106.15.243/api/offices/");
+        const response = await fetch("http://114.130.119.192/api/offices/");
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -89,14 +92,14 @@ function ComplainPage() {
   // submit the form on database:::::::
   const complainSubmit = async (event) => {
     event.preventDefault();
-  
+
     const target = event.target;
     const complain_title = target.complain_title.value;
     const complain_details = target.complain_details.value;
     const dropzone_file = target.dropzone_file.files[0]; // File object
     const complainer_info = target.complainer_info.value;
     const custom_office_name = target.custom_office_name?.value || '';
-  
+
     // Validate file extension
     const validExtensions = ["jpg", "jpeg", "png", "pdf", "mp4", "3gp"];
     if (dropzone_file) {
@@ -107,7 +110,7 @@ function ComplainPage() {
         );
         return;
       }
-  
+
       // Optional: Validate file size (e.g., limit to 10MB)
       const maxSizeMB = 10;
       const maxSizeBytes = maxSizeMB * 1024 * 1024;
@@ -116,19 +119,8 @@ function ComplainPage() {
         return;
       }
     }
-  
-    // Create FormData object
-    const formData = new FormData();
-    formData.append("title", complain_title);
-    formData.append("content", complain_details);
-    formData.append("file", dropzone_file); // Attach the file
-    formData.append("complainer_info", complainer_info);
-    formData.append("type", custom_office_name);
-    formData.append(
-      "selected_office",
-      selectedOffice ? selectedOffice.label : ""
-    );
-  
+
+
     try {
       if (validateCaptcha(captchaValue)) {
         setCaptchaError(false);
@@ -136,52 +128,68 @@ function ComplainPage() {
         setCaptchaError(true);
         return;
       }
-      
-      const response = await fetch("http://10.106.15.243/api/complaints/", {
+
+
+      const response = await fetch("http://114.130.119.192/api/complaints/", {
         method: "POST",
-        body: formData,
+        body: JSON.stringify({
+          "title": complain_title,
+          "content": complain_details,
+          "complainer_info": complainer_info,
+          "file": dropzone_file,
+          "office": selectedOffice ? selectedOffice.name_Bn : "",
+          "type": custom_office_name,
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
-  
+
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-  
+
       const result = await response.json();
       if (result) {
-        alert(`পরবর্তী আপডেট জানতে আপনার ট্র্যাকিং আইডি সংরক্ষণ করুন: ${result.tracking_id}`);
-        console.log('success', result);
+        navigate('/tracking_id');
+        toast.success('Successfully toasted!');
       }
     } catch (error) {
       console.error("Error:", error);
       // Handle error (e.g., show an error message)
     }
   };
-  
+
+
+
 
   return (
-    <ComplainForm
-      offices={offices}
-      hideInfo={hideInfo}
-      setHideInfo={setHideInfo}
-      inputValue={inputValue}
-      setInputValue={setInputValue}
-      setSelectedOffice={setSelectedOffice}
-      complainSubmit={complainSubmit}
-      reloadCaptcha={reloadCaptcha}
-      handleCaptchaChange={handleCaptchaChange}
-      captchaValue={captchaValue}
-      captchaError={captchaError}
-      text={text}
-      setText={setText}
-      summary={summary}
-      title={title}
-      setTitle={setTitle}
-      loading={loading}
-      error={error}
-      getSummary={getSummary}
-      officeName={officeName}
-      setOfficeName={setOfficeName}
-    />
+    <>
+      <Toaster />
+      <ComplainForm
+        offices={offices}
+        hideInfo={hideInfo}
+        setHideInfo={setHideInfo}
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+        setSelectedOffice={setSelectedOffice}
+        complainSubmit={complainSubmit}
+        reloadCaptcha={reloadCaptcha}
+        handleCaptchaChange={handleCaptchaChange}
+        captchaValue={captchaValue}
+        captchaError={captchaError}
+        text={text}
+        setText={setText}
+        summary={summary}
+        title={title}
+        setTitle={setTitle}
+        loading={loading}
+        error={error}
+        getSummary={getSummary}
+        officeName={officeName}
+        setOfficeName={setOfficeName}
+      />
+    </>
   );
 }
 

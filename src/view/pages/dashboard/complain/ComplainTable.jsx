@@ -20,7 +20,7 @@ function ComplainTable() {
   const [modalOpen, setModalOpen] = useState(false);
   const [complaintData, setComplaintData] = useState(null);
   const [rowModesModel, setRowModesModel] = useState({});
-  const scrollerRef = useRef(null); 
+  const scrollerRef = useRef(null);
 
 
   const columns = [
@@ -41,18 +41,18 @@ function ComplainTable() {
       headerAlign: 'right',
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-  
+
         if (isInEditMode) {
           return [
             <GridActionsCellItem
-            key={`save-${id}`}
+              key={`save-${id}`}
               icon={<SaveIcon />}
               label="Save"
               sx={{ color: 'primary.main' }}
               onClick={handleSaveClick(id)}
             />,
             <GridActionsCellItem
-            key={`cancel-${id}`}
+              key={`cancel-${id}`}
               icon={<CancelIcon />}
               label="Cancel"
               className="textPrimary"
@@ -61,25 +61,25 @@ function ComplainTable() {
             />,
           ];
         }
-  
+
         return [
           <div key={`show-${id}`}>
+            <GridActionsCellItem
+              icon={<VisibilityIcon />}
+              label="Show"
+              className="textPrimary"
+              onClick={() => handleOpenModal(id)}
+              color="inherit"
+            />
+
+            <DetailsModal
+              open={modalOpen}
+              handleClose={handleCloseModal}
+              data={complaintData}
+            />
+          </div>,
           <GridActionsCellItem
-            icon={<VisibilityIcon />}
-            label="Show"
-            className="textPrimary"
-            onClick={() => handleOpenModal(id)}
-            color="inherit"
-          />
-          
-          <DetailsModal
-           open={modalOpen}
-           handleClose={handleCloseModal}
-           data={complaintData}
-          />
-        </div>,
-          <GridActionsCellItem
-          key={`edit-${id}`}
+            key={`edit-${id}`}
             icon={<EditIcon />}
             label="Edit"
             className="textPrimary"
@@ -87,7 +87,7 @@ function ComplainTable() {
             color="inherit"
           />,
           <GridActionsCellItem
-          key={`delete-${id}`}
+            key={`delete-${id}`}
             icon={<DeleteIcon />}
             label="Delete"
             onClick={handleDeleteClick(id)}
@@ -101,7 +101,7 @@ function ComplainTable() {
 
   const fetchComplaintData = async (id) => {
     try {
-      const response = await fetch(`http://10.106.15.243/api/complaints/${id}/`);
+      const response = await fetch(`http://114.130.119.192/api/complaints/${id}/`);
       const data = await response.json();
       setComplaintData(data);
       setModalOpen(true);
@@ -113,7 +113,7 @@ function ComplainTable() {
 
   useEffect(() => {
     // Fetch data from the API
-    fetch('http://10.106.15.243/api/complaints/')
+    fetch('http://114.130.119.192/api/complaints/')
       .then(response => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -136,9 +136,9 @@ function ComplainTable() {
       event.defaultMuiPrevented = true;
     }
   };
-  
 
- const handleOpenModal = (id) => {
+
+  const handleOpenModal = (id) => {
     fetchComplaintData(id);
   };
 
@@ -154,7 +154,7 @@ function ComplainTable() {
   const handleSaveClick = (id) => () => {
     const updatedRow = rows.find(row => row.id === id);
 
-    fetch(`http://10.106.15.243/api/complaints/${id}`, {
+    fetch(`http://114.130.119.192/api/complaints/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -171,7 +171,7 @@ function ComplainTable() {
   };
 
   const handleDeleteClick = (id) => () => {
-    fetch(`http://10.106.15.243/api/complaints/${id}`, {
+    fetch(`http://114.130.119.192/api/complaints/${id}`, {
       method: 'DELETE',
     })
       .then(response => {
@@ -211,7 +211,7 @@ function ComplainTable() {
       sx={{
         height: 500,
         width: '100%',
-        margin:"10px",
+        margin: "10px",
         '& .actions': {
           color: 'text.secondary',
         },
@@ -219,10 +219,10 @@ function ComplainTable() {
           color: 'text.primary',
         },
       }}
-      ref={scrollerRef} 
+      ref={scrollerRef}
     >
       <h1 className='text-3xl font-semibold m-4'>Complains</h1>
-     <DataGrid
+      <DataGrid
         rows={rows}
         columns={columns}
         editMode="row"

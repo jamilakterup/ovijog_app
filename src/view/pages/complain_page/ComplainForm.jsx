@@ -39,46 +39,41 @@ function ComplainForm({
         <div className="grid md:grid-cols-3 md:gap-10">
           {/* left div */}
           <div className="md:col-span-2 md:me-20">
-          <div>
-          <label
-            htmlFor="complain_details"
-            className="custom-font md:text-[18px] block mb-2 font-medium text-gray-900 dark:text-white"
-          >
-            অভিযোগের বিবরণ <span className="text-red-500 font-bold">*</span>
-          </label>
-          <textarea
-            required
-            id="complain_details"
-            name="complain_details"
-            rows="4"
-            value={text}
-            onChange={(event)=>getSummary(event)}
-            className="custom-font md:text-[16px] block p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500"
-            placeholder="অভিযোগ সম্পর্কিত বিস্তারিত লিখুন..."
-          ></textarea>
-          {loading && <p>Loading summary...</p>}
-          {error && <p className="text-red-500">{error}</p>}
-        </div>
+            <div>
+              <label
+                htmlFor="complain_details"
+                className="custom-font md:text-[18px] block mb-2 font-medium text-gray-900 dark:text-white"
+              >
+                অভিযোগের বিবরণ <span className="text-red-500 font-bold">*</span>
+              </label>
+              <textarea
+                required
+                id="complain_details"
+                name="complain_details"
+                rows="4"
+                className="custom-font md:text-[16px] block p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500"
+                placeholder="অভিযোগ সম্পর্কিত বিস্তারিত লিখুন..."
+              ></textarea>
+              {loading && <p>Loading summary...</p>}
+              {error && <p className="text-red-500">{error}</p>}
+            </div>
 
-        <div className="my-4">
-          <label
-            htmlFor="complain_title"
-            className="custom-font md:text-[18px] block mb-2 font-medium text-gray-900 dark:text-white"
-          >
-            অভিযোগের বিষয় <span className="text-red-500 font-bold">*</span>
-          </label>
-          <input
-            type="text"
-            id="complain_title"
-            // onClick={getSummary}
-            name="complain_title"
-            onChange={(e) => setTitle(e.target.value)}
-            value={title}
-            className="custom-font md:text-[16px] border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-black-500 focus:border-black-500 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-black-500 dark:focus:border-black-500 bg-gray-50 dark:hover:bg-gray-800 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500"
-            placeholder="অভিযোগের বিষয় লিখুন..."
-            required
-          />
-        </div>
+            <div className="my-4">
+              <label
+                htmlFor="complain_title"
+                className="custom-font md:text-[18px] block mb-2 font-medium text-gray-900 dark:text-white"
+              >
+                অভিযোগের বিষয় <span className="text-red-500 font-bold">*</span>
+              </label>
+              <input
+                type="text"
+                id="complain_title"
+                name="complain_title"
+                className="custom-font md:text-[16px] border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-black-500 focus:border-black-500 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-black-500 dark:focus:border-black-500 bg-gray-50 dark:hover:bg-gray-800 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500"
+                placeholder="অভিযোগের বিষয় লিখুন..."
+                required
+              />
+            </div>
 
             <div className="flex items-center justify-center w-full mb-4">
               <label
@@ -173,34 +168,34 @@ function ComplainForm({
             {
               !officeName &&
               <div className="w-full rounded-md bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500">
-              <Autocomplete
-                disablePortal
-                options={offices}
-                getOptionLabel={(option) => option.name_Bn || ""}
-                onChange={(event, newValue) => setSelectedOffice(newValue)}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label={
-                      <span className="custom-font dark:text-gray-400">দপ্তর নির্বাচন করুন</span>
-                    }
-                    sx={{
-                      width: "100%",
-                      "& .MuiOutlinedInput-root": {
-                        "& fieldset": {
-                          borderColor: "gray", // Sets the default border color
-                          opacity: 0.3
+                <Autocomplete
+                  disablePortal
+                  options={offices}
+                  getOptionLabel={(option) => option.name_Bn || ""}
+                  onChange={(event, newValue) => setSelectedOffice(newValue)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label={
+                        <span className="custom-font dark:text-gray-400">দপ্তর নির্বাচন করুন</span>
+                      }
+                      sx={{
+                        width: "100%",
+                        "& .MuiOutlinedInput-root": {
+                          "& fieldset": {
+                            borderColor: "gray", // Sets the default border color
+                            opacity: 0.3
+                          },
+                          "&:hover fieldset": {
+                            borderColor: "gray", // Sets the border color on hover
+                            opacity: 0.7
+                          }
                         },
-                        "&:hover fieldset": {
-                          borderColor: "gray", // Sets the border color on hover
-                          opacity: 0.7
-                        }
-                      },
-                    }}
-                  />
-                )}
-              />
-            </div>
+                      }}
+                    />
+                  )}
+                />
+              </div>
             }
 
             <div className="flex items-center my-3">
@@ -216,13 +211,13 @@ function ComplainForm({
                 htmlFor="custom_office_name"
                 className="custom-font md:text-[18px] ms-2 font-medium text-gray-900 dark:text-gray-300"
               >
-               দপ্তরের নাম লিখে দিতে চাই
+                দপ্তরের নাম লিখে দিতে চাই
               </label>
             </div>
 
             {
               officeName &&
-                 <div>
+              <div>
                 <label
                   htmlFor="custom_office_name"
                   className="custom-font md:text-[18px] block mb-2 font-medium text-gray-900 dark:text-white"
@@ -251,7 +246,7 @@ function ComplainForm({
                 className="border border-gray-400 rounded-sm"
                 placeholder="Enter Captcha Value"
                 onChange={handleCaptchaChange}
-                required
+              // required
               />
               {captchaError && (
                 <span className="text-red-500">Captcha is incorrect. Please try again.</span>

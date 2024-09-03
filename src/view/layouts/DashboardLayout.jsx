@@ -12,10 +12,9 @@ function DashboardLayout() {
       <DashboardNav isOpen={isOpen} setIsOpen={setIsOpen} />
 
       <div className="flex min-h-[calc(100vh-153px)]">
-        <div className={`${
-            !isOpen ? "w-60" : "w-10"
+        <div className={`${!isOpen ? "w-60" : "w-10"
           } transition-all ease-in-out bg-slate-100`}>
-            <SideNav isOpen={isOpen}/>
+          <SideNav isOpen={isOpen} />
         </div>
 
         <Outlet />
