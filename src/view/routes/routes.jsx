@@ -4,6 +4,8 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import HomePage from "../pages/dashboard/HomePage";
 import ComplainTable from "../pages/dashboard/complain/ComplainTable";
 import TrackingPage from "../pages/complain_page/TrackingPage";
+import Login from "../pages/login-registration/Login";
+import Registration from "../pages/login-registration/Registration";
 
 const router = createBrowserRouter([
     {
@@ -17,6 +19,16 @@ const router = createBrowserRouter([
         errorElement: '404'
     },
     {
+        path: '/login',
+        element: <Login />,
+        errorElement: '404'
+    },
+    {
+        path: '/registration',
+        element: <Registration />,
+        errorElement: '404'
+    },
+    {
         path: '/dashboard',
         element: <DashboardLayout />,
         errorElement: '404',
@@ -26,7 +38,7 @@ const router = createBrowserRouter([
                 element: <HomePage />
             },
             {
-                path:'complain-table',
+                path: 'complain-table',
                 element: <ComplainTable />
             }
         ]

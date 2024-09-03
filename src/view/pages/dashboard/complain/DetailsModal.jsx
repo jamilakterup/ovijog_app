@@ -33,25 +33,77 @@ const imageStyle = {
 };
 
 function DetailsModal({ open, handleClose, data }) {
-  const [statusOptions, setStatusOptions] = useState([]); // State for status options
-  const [selectedStatus, setSelectedStatus] = useState(""); // State for selected status
+  const [statusOptions, setStatusOptions] = useState([]);
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState("");
+  const [comment, setComment] = useState(""); // State for comment input
 
-  // Fetch status options from the API
   useEffect(() => {
     const getStatus = async () => {
       try {
-        const response = await axios.get('http://114.130.119.192/api/status/');
-        setStatusOptions(response.data); // Assuming response.data contains the array of status options
+        const response = await axios.get("http://114.130.119.192/api/status/");
+        setStatusOptions(response.data);
       } catch (error) {
         console.error("Error fetching status options:", error);
       }
     };
 
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get("http://114.130.119.192/api/users/");
+        setUsers(response.data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    fetchUsers();
     getStatus();
   }, []);
 
-  const handleChange = (event) => {
+  const handleStatusChange = (event) => {
     setSelectedStatus(event.target.value);
+  };
+
+  const handleUserChange = (event) => {
+    setSelectedUser(event.target.value);
+  };
+
+  const handleCommentChange = (event) => {
+    setComment(event.target.value);
+  };
+
+
+  // submit the form
+  const handleSubmitForm = async () => {
+    try {
+      const response = await axios.post(
+        "http://114.130.119.192/api/complaint-progress-submit/",
+        {
+          tracking_id: data.tracking_id,
+          status_id: selectedStatus,
+          assigned_person_id: selectedUser,
+          assigned_office_id: data.assigned_office_id, // Use appropriate value from `data`
+          comment: comment,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      // Handle successful response
+      if (response.status === 200) {
+        console.log("Form submitted successfully:", response.data);
+        handleClose()
+        // Optionally, you can display a success message or reset form fields
+      }
+    } catch (error) {
+      // Handle error response
+      console.error("Error submitting form:", error);
+    }
   };
 
   if (!data) return null; // Return null if no data is available
@@ -83,13 +135,16 @@ function DetailsModal({ open, handleClose, data }) {
 
           <Box sx={{ width: "500px", marginRight: "30px" }}>
             <span className="text-base text-gray-500">সার-সংক্ষেপ</span> <br />
-            <Typography>
-              {data.content}
-            </Typography>
+            <Typography>{data.content}</Typography>
 
             <Box sx={{ marginTop: "50px" }}>
               <span>মন্তব্যঃ </span> <br />
-              <textarea className="bg-slate-200 rounded-md" name="comment"></textarea>
+              <textarea
+                className="bg-slate-200 rounded-md p-1"
+                name="comment"
+                value={comment}
+                onChange={handleCommentChange}
+              ></textarea>
             </Box>
           </Box>
 
@@ -114,22 +169,36 @@ function DetailsModal({ open, handleClose, data }) {
             </div>
             <span className="text-gray-700">{data.complainer_info}</span>
 
-            <div className="text-base text-gray-500 my-3">
-              দায়িত্বপ্রাপ্ত-কর্মকর্তা{" "}
-            </div>
-            <input type="text" className="bg-slate-300 rounded-md" />
+            <FormControl sx={{ minWidth: 220 }} size="small">
+              <InputLabel id="user-select-label">
+                দায়িত্বপ্রাপ্ত-কর্মকর্তা
+              </InputLabel>
+              <Select
+                labelId="user-select-label"
+                id="user-select"
+                value={selectedUser}
+                label="দায়িত্বপ্রাপ্ত-কর্মকর্তা"
+                onChange={handleUserChange}
+              >
+                {users.map((user) => (
+                  <MenuItem key={user.id} value={user.id}>
+                    {user.mobile_number}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Box>
 
           <Box>
             <Box sx={{ minWidth: 120 }}>
-              <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel id="demo-simple-select-standard-label">স্ট্যাটাস</InputLabel>
+              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                <InputLabel id="demo-select-small-label">স্ট্যাটাস</InputLabel>
                 <Select
-                  labelId="demo-simple-select-standard-label"
-                  id="demo-simple-select-standard"
+                  labelId="demo-select-small-label"
+                  id="demo-select-small"
                   value={selectedStatus}
                   label="complain_status"
-                  onChange={handleChange}
+                  onChange={handleStatusChange}
                 >
                   {statusOptions.map((status) => (
                     <MenuItem key={status.id} value={status.id}>
@@ -148,7 +217,9 @@ function DetailsModal({ open, handleClose, data }) {
           </Box>
 
           <Box sx={{ gridColumn: "span 3", textAlign: "center" }}>
-            <Button onClick={handleClose} variant="outlined">সাবমিট</Button>
+            <Button onClick={handleSubmitForm} variant="outlined">
+              সাবমিট
+            </Button>
           </Box>
         </Box>
       </Fade>

@@ -221,7 +221,7 @@ function ComplainTable() {
       }}
       ref={scrollerRef}
     >
-      <h1 className='text-3xl font-semibold m-4'>Complains</h1>
+      <h1 className='text-3xl text-gray-700 font-semibold m-4'>অভিযোগ সমূহ</h1>
       <DataGrid
         rows={rows}
         columns={columns}

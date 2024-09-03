@@ -30,8 +30,8 @@ function ComplainForm({
 
   return (
     <section className="container mx-auto md:px-5 px-4 my-8">
-      <hr className="border border-black dark:border-cyan-700 mt-12" />
-      <h2 className="custom-bold-font text-3xl font-medium text-center -mt-4 bg-white dark:bg-slate-900 w-[350px] mx-auto mb-10 text-violet-800">
+      <hr className="border border-black mt-12" />
+      <h2 className="custom-bold-font text-3xl font-medium text-center -mt-4 bg-white w-[350px] mx-auto mb-10 text-violet-800">
         নাগরিক অভিযোগ দাখিল ফরম
       </h2>
 
@@ -42,7 +42,7 @@ function ComplainForm({
             <div>
               <label
                 htmlFor="complain_details"
-                className="custom-font md:text-[18px] block mb-2 font-medium text-gray-900 dark:text-white"
+                className="custom-font md:text-[18px] block mb-2 font-medium text-gray-900"
               >
                 অভিযোগের বিবরণ <span className="text-red-500 font-bold">*</span>
               </label>
@@ -53,7 +53,7 @@ function ComplainForm({
                 rows="4"
                 value={text}
                 onChange={(event) => getSummary(event)}
-                className="custom-font md:text-[16px] block p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500"
+                className="custom-font md:text-[16px] block p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 bg-gray-50"
                 placeholder="অভিযোগ সম্পর্কিত বিস্তারিত লিখুন..."
               ></textarea>
               {loading && <p>Loading summary...</p>}
@@ -63,7 +63,7 @@ function ComplainForm({
             <div className="my-4">
               <label
                 htmlFor="complain_title"
-                className="custom-font md:text-[18px] block mb-2 font-medium text-gray-900 dark:text-white"
+                className="custom-font md:text-[18px] block mb-2 font-medium text-gray-900"
               >
                 অভিযোগের বিষয় <span className="text-red-500 font-bold">*</span>
               </label>
@@ -71,7 +71,7 @@ function ComplainForm({
                 type="text"
                 id="complain_title"
                 name="complain_title"
-                className="custom-font md:text-[16px] border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-black-500 focus:border-black-500 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-black-500 dark:focus:border-black-500 bg-gray-50 dark:hover:bg-gray-800 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500"
+                className="custom-font md:text-[16px] border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-black-500 focus:border-black-500 block w-full p-2.5 bg-gray-50 hover:bg-gray-100"
                 placeholder="অভিযোগের বিষয় লিখুন..."
                 required
               />
@@ -80,11 +80,11 @@ function ComplainForm({
             <div className="flex items-center justify-center w-full mb-4">
               <label
                 htmlFor="dropzone_file"
-                className="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500"
+                className="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
               >
                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
                   <svg
-                    className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                    className="w-8 h-8 mb-4 text-gray-500"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -97,12 +97,12 @@ function ComplainForm({
                       d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                     />
                   </svg>
-                  <p className="custom-bold-font text-[18px] mb-2 text-gray-500 dark:text-gray-400">
+                  <p className="custom-bold-font text-[18px] mb-2 text-gray-500">
                     <span className="font-semibold">
                       অভিযোগ সংক্রান্ত প্রমাণাদি(যদি থাকে)
                     </span>{" "}
                   </p>
-                  <p className="custom-font text-[14px] text-gray-500 dark:text-gray-400">
+                  <p className="custom-font text-[14px] text-gray-500">
                     ( ফাইলের সর্বোচ্চ সাইজ ১০ মেগাবাইট(MB) এবং ফাইলের অনুমোদিত
                     টাইপ সমূহ png, PNG, <br /> jpeg, JPEG, doc, DOC, docx, DOCX,
                     pdf, PDF, xls, xlsx, mp3, MP3, 3gp, 3GP, mp4, MP4)
@@ -124,7 +124,7 @@ function ComplainForm({
               <div>
                 <label
                   htmlFor="complainer_info"
-                  className="custom-font md:text-[18px] block mb-2 font-medium text-gray-900 dark:text-white"
+                  className="custom-font md:text-[18px] block mb-2 font-medium text-gray-900"
                 >
                   অভিযোগকারীর তথ্য
                 </label>
@@ -136,7 +136,7 @@ function ComplainForm({
                   type="text"
                   id="complainer_info"
                   name="complainer_info"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 custom-font rounded-lg focus:ring-black-500 focus:border-black-500 block w-full p-2 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-black-500 dark:focus:border-black-500 dark:hover:bg-gray-800 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 custom-font rounded-lg focus:ring-black-500 focus:border-black-500 block w-full p-2 hover:bg-gray-100 "
                   placeholder="নাম, মোবাইল নাম্বার, ঠিকানা..."
                 ></input>
               </div>
@@ -149,11 +149,11 @@ function ComplainForm({
                 value=""
                 name="hide_info"
                 onChange={() => setHideInfo(!hideInfo)}
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
               ></input>
               <label
                 htmlFor="default-checkbox"
-                className="custom-font md:text-[18px] ms-2 font-medium text-gray-900 dark:text-gray-300"
+                className="custom-font md:text-[18px] ms-2 font-medium text-gray-900"
               >
                 আমার পরিচয় গোপন রাখতে চাই।
               </label>
@@ -169,7 +169,7 @@ function ComplainForm({
 
             {
               !officeName &&
-              <div className="w-full rounded-md bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500">
+              <div className="w-full rounded-md bg-gray-50 hover:bg-gray-100">
                 <Autocomplete
                   disablePortal
                   options={offices}
@@ -179,7 +179,7 @@ function ComplainForm({
                     <TextField
                       {...params}
                       label={
-                        <span className="custom-font dark:text-gray-400">দপ্তর নির্বাচন করুন</span>
+                        <span className="custom-font">দপ্তর নির্বাচন করুন</span>
                       }
                       sx={{
                         width: "100%",
@@ -207,11 +207,11 @@ function ComplainForm({
                 value=""
                 name="hide_info"
                 onChange={() => setOfficeName(!officeName)}
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
               ></input>
               <label
                 htmlFor="custom_office_name"
-                className="custom-font md:text-[18px] ms-2 font-medium text-gray-900 dark:text-gray-300"
+                className="custom-font md:text-[18px] ms-2 font-medium text-gray-900"
               >
                 দপ্তরের নাম লিখে দিতে চাই
               </label>
@@ -222,7 +222,7 @@ function ComplainForm({
               <div>
                 <label
                   htmlFor="custom_office_name"
-                  className="custom-font md:text-[18px] block mb-2 font-medium text-gray-900 dark:text-white"
+                  className="custom-font md:text-[18px] block mb-2 font-medium text-gray-900"
                 >
                   দপ্তরের নাম লিখুন
                 </label>
@@ -231,13 +231,13 @@ function ComplainForm({
                   type="text"
                   id="custom_office_name"
                   name="custom_office_name"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 custom-font rounded-lg focus:ring-black-500 focus:border-black-500 block w-full p-2 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-black-500 dark:focus:border-black-500 dark:hover:bg-gray-800 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 custom-font rounded-lg focus:ring-black-500 focus:border-black-500 block w-full p-2 hover:bg-gray-100"
                   placeholder="দপ্তরের নাম..."
                 ></input>
               </div>
             }
 
-            <div className="mt-6 border border-gray-200/80 bg-gray-100/60 dark:bg-gray-700 dark:border-gray-600 rounded-md p-3">
+            <div className="mt-6 border border-gray-200/80 bg-gray-100/60 rounded-md p-3">
               <div className="mb-2 flex gap-3">
                 <LoadCanvasTemplateNoReload />
 
@@ -255,10 +255,10 @@ function ComplainForm({
               )}
             </div>
 
-            <div className="flex items-center justify-end py-2 dark:border-gray-600 mt-5">
+            <div className="flex items-center justify-end py-2 mt-5">
               <button
                 type="submit"
-                className="custom-bold-font md:text-[16px] py-3.5 px-4 text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800 w-full text-center"
+                className="custom-bold-font md:text-[16px] py-3.5 px-4 text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800 w-full text-center"
               >
                 অভিযোগ দাখিল করুন
               </button>

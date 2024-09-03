@@ -28,20 +28,24 @@ function ComplainPage() {
     setError(''); // Clear previous errors
 
     try {
-      // Prepare FormData with the input value
-      const formData = new FormData();
-      formData.append("paragraph", value);
-      console.log(formData)
       // Send the POST request with FormData
-      const response = await fetch("http://114.130.116.176/generate-subject/", {
+      const response = await fetch("http://114.130.119.192/api/complaints/", {
         method: "POST",
-        body: formData,
+        body: JSON.stringify({
+          "paragraph": value,
+        }),
         headers: {
-          "Accept": "application/json",
-          'Access-Control-Allow-Origin': '*',
-          'access-control-allow-origin': 'localhost:5173',
+          "Content-Type": 'application/json',
         }
       });
+
+      // const response = await axios.post('http://114.130.116.176/generate-subject', {
+      //   "paragraph": value,
+      // }, {
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   }
+      // })
 
       // Check if the response is not OK
       if (!response.ok) {
