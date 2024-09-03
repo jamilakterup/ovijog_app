@@ -10,7 +10,7 @@ function ComplainPage() {
   const [hideInfo, setHideInfo] = useState(false);
   const [officeName, setOfficeName] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const [selectedOffice, setSelectedOffice] = useState(null);
+  const [selectedOffice, setSelectedOffice] = useState('');
   const [captchaValue, setCaptchaValue] = useState("");
   const [captchaError, setCaptchaError] = useState(false);
   const [text, setText] = useState('');
@@ -118,8 +118,9 @@ function ComplainPage() {
     const complain_details = target.complain_details.value;
     const dropzone_file = target.dropzone_file.files[0]; // File object
     const complainer_info = target.complainer_info.value;
-    const custom_office_name = target.custom_office_name?.value || '';
+    const custom_office_name = target.custom_office?.value;
 
+    
     // Validate file extension
     const validExtensions = ["jpg", "jpeg", "png", "pdf", "mp4", "3gp"];
     if (dropzone_file) {
@@ -157,8 +158,8 @@ function ComplainPage() {
           "content": complain_details,
           "complainer_info": complainer_info,
           "file": dropzone_file,
-          "office": selectedOffice ? selectedOffice.name_Bn : "",
-          "type": custom_office_name,
+          "office_id": selectedOffice ? selectedOffice.id : "",
+          "custom_office": custom_office_name,
         }),
         headers: {
           'Content-Type': 'application/json'

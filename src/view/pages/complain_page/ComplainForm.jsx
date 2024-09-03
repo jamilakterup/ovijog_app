@@ -11,6 +11,7 @@ function ComplainForm({
   setHideInfo,
   inputValue,
   setInputValue,
+  selectedOffice,
   setSelectedOffice,
   complainSubmit,
   reloadCaptcha,
@@ -26,7 +27,13 @@ function ComplainForm({
   error,
   getSummary,
 }) {
-
+  // Handler for checkbox to set custom office name and clear selected office
+  const handleCustomOfficeToggle = () => {
+    setOfficeName(!officeName);
+    if (!officeName) {
+      setSelectedOffice(null); // Clear the selected office when checkbox is checked
+    }
+  };
 
   return (
     <section className="container mx-auto md:px-5 px-4 my-8">
@@ -167,13 +174,13 @@ function ComplainForm({
               </span>
             )}
 
-            {
-              !officeName &&
+            {!officeName && (
               <div className="w-full rounded-md bg-gray-50 hover:bg-gray-100">
                 <Autocomplete
                   disablePortal
                   options={offices}
                   getOptionLabel={(option) => option.name_Bn || ""}
+                  value={selectedOffice}
                   onChange={(event, newValue) => setSelectedOffice(newValue)}
                   renderInput={(params) => (
                     <TextField
@@ -186,27 +193,27 @@ function ComplainForm({
                         "& .MuiOutlinedInput-root": {
                           "& fieldset": {
                             borderColor: "gray", // Sets the default border color
-                            opacity: 0.3
+                            opacity: 0.3,
                           },
                           "&:hover fieldset": {
                             borderColor: "gray", // Sets the border color on hover
-                            opacity: 0.7
-                          }
+                            opacity: 0.7,
+                          },
                         },
                       }}
                     />
                   )}
                 />
               </div>
-            }
+            )}
 
             <div className="flex items-center my-3">
               <input
                 id="custom_office_name"
                 type="checkbox"
                 value=""
-                name="hide_info"
-                onChange={() => setOfficeName(!officeName)}
+                name="custom_office_name"
+                onChange={handleCustomOfficeToggle}
                 className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
               ></input>
               <label
@@ -217,41 +224,47 @@ function ComplainForm({
               </label>
             </div>
 
-            {
-              officeName &&
+            {officeName && (
               <div>
                 <label
-                  htmlFor="custom_office_name"
+                  htmlFor="custom_office"
                   className="custom-font md:text-[18px] block mb-2 font-medium text-gray-900"
                 >
                   দপ্তরের নাম লিখুন
                 </label>
                 <input
-                  required
                   type="text"
-                  id="custom_office_name"
-                  name="custom_office_name"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 custom-font rounded-lg focus:ring-black-500 focus:border-black-500 block w-full p-2 hover:bg-gray-100"
-                  placeholder="দপ্তরের নাম..."
-                ></input>
+                  id="custom_office"
+                  name="custom_office"
+                  className="custom-font md:text-[16px] border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-black-500 focus:border-black-500 block w-full p-2.5 bg-gray-50 hover:bg-gray-100"
+                  placeholder="দপ্তরের নাম লিখুন..."
+                  required
+                />
               </div>
-            }
+            )}
 
             <div className="mt-6 border border-gray-200/80 bg-gray-100/60 rounded-md p-3">
               <div className="mb-2 flex gap-3">
                 <LoadCanvasTemplateNoReload />
 
-                <img src={reloadimg} alt="reload-captcha-image" className="w-9 h-9" onClick={() => reloadCaptcha()} />
+                <img
+                  src={reloadimg}
+                  alt="reload-captcha-image"
+                  className="w-9 h-9"
+                  onClick={() => reloadCaptcha()}
+                />
               </div>
               <input
                 type="text"
                 className="border border-gray-400 rounded-sm"
                 placeholder="Enter Captcha Value"
                 onChange={handleCaptchaChange}
-              // required
               />
+              <br />
               {captchaError && (
-                <span className="text-red-500">Captcha is incorrect. Please try again.</span>
+                <span className="text-red-500">
+                  Captcha is incorrect. Please try again.
+                </span>
               )}
             </div>
 
@@ -270,7 +283,6 @@ function ComplainForm({
   );
 }
 
-// Define PropTypes for ComplainForm
 ComplainForm.propTypes = {
   offices: PropTypes.arrayOf(
     PropTypes.shape({
@@ -287,6 +299,15 @@ ComplainForm.propTypes = {
   reloadCaptcha: PropTypes.func.isRequired,
   handleCaptchaChange: PropTypes.func.isRequired,
   captchaError: PropTypes.bool.isRequired,
+  officeName: PropTypes.bool.isRequired,
+  setOfficeName: PropTypes.func.isRequired,
+  text: PropTypes.string.isRequired,
+  setText: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
+  setTitle: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
+  error: PropTypes.string,
+  getSummary: PropTypes.func.isRequired,
 };
 
 export default ComplainForm;
