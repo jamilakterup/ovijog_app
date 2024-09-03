@@ -8,7 +8,7 @@ const TrackingPage = () => {
   const { trackingId } = useParams();
 
   useEffect(() => {
-    toast.success('Successfully toasted!');
+    toast.success('আপনার অভিযোগটি সফলভাবে সম্পন্ন হয়েছে!');
   }, [])
 
   return (

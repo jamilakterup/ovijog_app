@@ -67,43 +67,6 @@ function ComplainPage() {
     }
   };
 
-  // useEffect(() => {
-
-
-  //   const getTitle = async () => {
-  //     const formData = new FormData();
-  //     formData.append('paragraph', "some new text for testing");
-
-  //     try {
-  //       // const response = await fetch("http://114.130.116.176/generate-subject", {
-  //       //   method: "POST",
-  //       //   body: JSON.stringify({
-  //       //     "paragraph": "some new text for testing"
-  //       //   }),
-  //       //   headers: {
-  //       //     'Content-Type': 'application/json',
-  //       //   }
-  //       // })
-  //       // const response = await axios.post('http://114.130.116.176/generate-subject', formData, )
-  //       const response = axios.post('http://114.130.116.176/generate-subject', { "body": formData }, {
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //           'Access-Control-Allow-Origin': 'origin'
-  //         }
-  //       }
-  //       )
-  //       console.log('response is:', response);
-  //     }
-  //     catch (err) {
-  //       console.log(err)
-  //     }
-  //   }
-
-  //   if (text) {
-  //     getTitle()
-  //   }
-  // }, [text])
-
 
   useEffect(() => {
     const fetchOffices = async () => {

@@ -8,7 +8,8 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const style = {
   position: "absolute",
@@ -32,13 +33,28 @@ const imageStyle = {
 };
 
 function DetailsModal({ open, handleClose, data }) {
-  const [age, setAge] = useState("");
+  const [statusOptions, setStatusOptions] = useState([]); // State for status options
+  const [selectedStatus, setSelectedStatus] = useState(""); // State for selected status
 
-  if (!data) return null; // Return null if no data is available
+  // Fetch status options from the API
+  useEffect(() => {
+    const getStatus = async () => {
+      try {
+        const response = await axios.get('http://114.130.119.192/api/status/');
+        setStatusOptions(response.data); // Assuming response.data contains the array of status options
+      } catch (error) {
+        console.error("Error fetching status options:", error);
+      }
+    };
+
+    getStatus();
+  }, []);
 
   const handleChange = (event) => {
-    setAge(event.target.value);
+    setSelectedStatus(event.target.value);
   };
+
+  if (!data) return null; // Return null if no data is available
 
   return (
     <Modal
@@ -68,15 +84,12 @@ function DetailsModal({ open, handleClose, data }) {
           <Box sx={{ width: "500px", marginRight: "30px" }}>
             <span className="text-base text-gray-500">সার-সংক্ষেপ</span> <br />
             <Typography>
-              {data.content} Lorem ipsum dolor sit amet consectetur adipisicing
-              elit. Animi aliquam saepe eius repellendus pariatur reiciendis
-              optio! Autem numquam earum magnam iste delectus eveniet adipisci
-              quis dignissimos voluptates, porro sint explicabo?
+              {data.content}
             </Typography>
 
             <Box sx={{ marginTop: "50px" }}>
-            <span>মন্তব্যঃ </span> <br />
-            <textarea className="bg-slate-200 rounded-md" name="comment"></textarea>
+              <span>মন্তব্যঃ </span> <br />
+              <textarea className="bg-slate-200 rounded-md" name="comment"></textarea>
             </Box>
           </Box>
 
@@ -91,8 +104,6 @@ function DetailsModal({ open, handleClose, data }) {
               দপ্তরঃ {data.office}
             </div>
 
-            <span className="text-gray-700">{data.office}</span>
-
             <span className="text-base text-gray-500">জমার তারিখঃ </span>
             <span className="text-gray-700">
               {new Date(data.created_at).toLocaleString()}
@@ -104,39 +115,40 @@ function DetailsModal({ open, handleClose, data }) {
             <span className="text-gray-700">{data.complainer_info}</span>
 
             <div className="text-base text-gray-500 my-3">
-            দায়িত্বপ্রাপ্ত-কর্মকর্তা{" "}
+              দায়িত্বপ্রাপ্ত-কর্মকর্তা{" "}
             </div>
             <input type="text" className="bg-slate-300 rounded-md" />
           </Box>
 
           <Box>
             <Box sx={{ minWidth: 120 }}>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">স্ট্যাটাস</InputLabel>
+              <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                <InputLabel id="demo-simple-select-standard-label">স্ট্যাটাস</InputLabel>
                 <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  // value={complain_status}
+                  labelId="demo-simple-select-standard-label"
+                  id="demo-simple-select-standard"
+                  value={selectedStatus}
                   label="complain_status"
                   onChange={handleChange}
-                  className="bg-yellow-500"
                 >
-                  <MenuItem value={1}>চলমান</MenuItem>
-                  <MenuItem value={2}>নিস্পন্ন</MenuItem>
-                  <MenuItem value={3}>সম্পন্ন</MenuItem>
+                  {statusOptions.map((status) => (
+                    <MenuItem key={status.id} value={status.id}>
+                      {status.name} {/* Replace with appropriate field name */}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Box>
-           <div className="mt-8">
-            <span className="text-gray-500">সংযুক্ত ফাইলঃ </span>
-           {data.file && (
-              <img src={data.file} alt="Complaint File" style={imageStyle} />
-            )}
-           </div>
+            <div className="mt-8">
+              <span className="text-gray-500">সংযুক্ত ফাইলঃ </span>
+              {data.file && (
+                <img src={data.file} alt="Complaint File" style={imageStyle} />
+              )}
+            </div>
           </Box>
 
           <Box sx={{ gridColumn: "span 3", textAlign: "center" }}>
-          <Button onClick={handleClose} variant="outlined">সাবমিট</Button>
+            <Button onClick={handleClose} variant="outlined">সাবমিট</Button>
           </Box>
         </Box>
       </Fade>
