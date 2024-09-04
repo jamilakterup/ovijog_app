@@ -83,6 +83,8 @@ function DetailsModal({ open, handleClose, usersOptions, setUsersOptions, office
         handleClose();
         // Optionally, you can display a success message or reset form fields
       }
+
+      window.location.reload();
     } catch (error) {
       // Handle error response
       console.error("Error submitting form:", error);
@@ -109,7 +111,7 @@ function DetailsModal({ open, handleClose, usersOptions, setUsersOptions, office
         <Box sx={style}>
           <Box sx={{ gridColumn: "span 3" }}>
             <Typography id="transition-modal-title" variant="h6" component="h2">
-              <span className="text-gray-600 custom-font">শিরোনামঃ </span>
+              <span className="text-gray-600 custom-font">শিরোনাম: </span>
               <span className="text-gray-700 custom-bold-font">
                 {data.title}
               </span>
@@ -117,8 +119,8 @@ function DetailsModal({ open, handleClose, usersOptions, setUsersOptions, office
           </Box>
           <Box sx={{ gridColumn: "span 3", gap: "20px", display: "flex" }}>
             <Typography id="transition-modal-title" variant="h6" component="h2">
-              <span className="text-base text-gray-600 custom-font">
-                সার-সংক্ষেপ
+              <span className="text-gray-600 custom-font">
+                বর্ণনা:
               </span>{" "}
               <br />
               <span className="custom-font text-gray-800">{data.content}</span>
@@ -129,7 +131,7 @@ function DetailsModal({ open, handleClose, usersOptions, setUsersOptions, office
                 borderLeft: "1px dashed gray",
                 borderRight: "1px dashed gray",
                 padding: "0 10px",
-                width: "525px",
+                width: "800px",
               }}
             >
               <Typography
@@ -137,15 +139,16 @@ function DetailsModal({ open, handleClose, usersOptions, setUsersOptions, office
                 variant="h6"
                 component="h2"
               >
+                <span className="custom-font text-gray-700">তথ্য:</span>
                 <div className="text-base text-gray-600 custom-font mb-1">
-                  ট্র্যাকিং নম্বরঃ{" "}
+                  ট্র্যাকিং নম্বর:{" "}
                   <span className="text-blue-700 font-semibold">
                     {data.tracking_id}
                   </span>
                 </div>
 
                 <div className="text-base text-gray-600 custom-font mb-1">
-                  জমার তারিখঃ{" "}
+                  জমার তারিখ:{" "}
                   <span className="text-gray-700">
                     {new Date(data.created_at).toLocaleDateString("en-GB", {
                       day: "2-digit",
@@ -156,14 +159,14 @@ function DetailsModal({ open, handleClose, usersOptions, setUsersOptions, office
                 </div>
 
                 <div className="text-base text-gray-600 custom-font mb-1">
-                  অভিযোগকারীর তথ্যঃ{" "}
+                  অভিযোগকারীর তথ্য:{" "}
                   <span className="text-gray-700 custom-bold-font">
                     {data.complainer_info}
                   </span>
                 </div>
 
                 <div className="text-base text-gray-600 custom-font mb-1">
-                  সংযুক্ত ফাইলঃ {" "}
+                  সংযুক্ত ফাইল:{" "}
                   {data.file && (
                     <img
                       src={data.file}
@@ -176,8 +179,14 @@ function DetailsModal({ open, handleClose, usersOptions, setUsersOptions, office
             </Box>
 
             <Box>
+              <Typography    id="transition-modal-title"
+                variant="h6"
+                component="h2">
+              <span className="custom-font text-gray-700">অ্যাসাইন/ফরওয়ার্ড করুন</span>
+              </Typography>
+
               <div className="custom-font">
-                <span className="text-gray-800">মন্তব্যঃ </span> <br />
+                <span className="text-gray-800">মন্তব্য:</span> <br />
                 <textarea
                   className="bg-slate-200 rounded-md p-1"
                   name="comment"
@@ -216,7 +225,7 @@ function DetailsModal({ open, handleClose, usersOptions, setUsersOptions, office
                 >
                   {usersOptions.map((user) => (
                     <MenuItem key={user.id} value={user.id}>
-                      {user.mobile_number}
+                      {user.first_name} {user.last_name}
                     </MenuItem>
                   ))}
                 </Select>

@@ -21,11 +21,9 @@ function ComplainForm({
   officeName,
   setOfficeName,
   text,
-  setText,
   title,
   setTitle,
   loading,
-  error,
   getSummary,
 }) {
   // Handler for checkbox to set custom office name and clear selected office
@@ -34,6 +32,10 @@ function ComplainForm({
     if (!officeName) {
       setSelectedOffice(null); // Clear the selected office when checkbox is checked
     }
+  };
+
+  const handleTitleChange = (event) => {
+    setTitle(event.target.value);
   };
 
   return (
@@ -64,26 +66,26 @@ function ComplainForm({
                 className="custom-font md:text-[16px] block p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 bg-gray-50"
                 placeholder="অভিযোগ সম্পর্কিত বিস্তারিত লিখুন..."
               ></textarea>
-              {loading && <p>Loading summary...</p>}
-              {error && <p className="text-red-500">{error}</p>}
             </div>
 
             <div className="my-4">
-              <label
-                htmlFor="complain_title"
-                className="custom-font md:text-[18px] block mb-2 font-medium text-gray-900"
-              >
-                অভিযোগের বিষয় <span className="text-red-500 font-bold">*</span>
-              </label>
-              <input
-                type="text"
-                id="complain_title"
-                name="complain_title"
-                className="custom-font md:text-[16px] border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-black-500 focus:border-black-500 block w-full p-2.5 bg-gray-50 hover:bg-gray-100"
-                placeholder="অভিযোগের বিষয় লিখুন..."
-                required
-              />
-            </div>
+        <label
+          htmlFor="complain_title"
+          className="custom-font md:text-[18px] block mb-2 font-medium text-gray-900"
+        >
+          অভিযোগের বিষয় <span className="text-red-500 font-bold">*</span>
+        </label>
+        <input
+          type="text"
+          id="complain_title"
+          name="complain_title"
+          value={title} // Bind the value to the state
+          onChange={handleTitleChange} // Update state on change
+          className="custom-font md:text-[16px] border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-black-500 focus:border-black-500 block w-full p-2.5 bg-gray-50 hover:bg-gray-100"
+          placeholder="অভিযোগের বিষয় লিখুন..."
+          required
+        />
+      </div>
 
             <div className="flex items-center justify-center w-full mb-4">
               <label

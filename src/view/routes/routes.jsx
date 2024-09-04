@@ -7,6 +7,7 @@ import TrackingPage from "../pages/complain_page/TrackingPage";
 import Login from "../pages/login-registration/Login";
 import Registration from "../pages/login-registration/Registration";
 import TestLayout from "../layouts/TestLayout";
+import ViewComplain from "../pages/dashboard/complain/ViewComplain";
 
 const routes = createBrowserRouter([
     {
@@ -22,6 +23,11 @@ const routes = createBrowserRouter([
     {
         path: '/tracking/:trackingId',
         element: <TrackingPage />,
+        errorElement: '404'
+    },
+    {
+        path: '/complain-details/:trackingId',
+        element: <ViewComplain/>,
         errorElement: '404'
     },
     {

@@ -13,6 +13,7 @@ import {
 } from "@mui/x-data-grid";
 import DetailsModal from "./DetailsModal";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function ComplainTable() {
   const [rows, setRows] = useState([]);
@@ -24,6 +25,7 @@ function ComplainTable() {
   const [usersOptions, setUsersOptions] = useState([]);
   const [officesOptions, setOfficesOptions] = useState([]);
   const scrollerRef = useRef(null);
+  const navigate= useNavigate(null);
 
   // Function to get the class based on status ID
   const getStatusClass = (statusId) => {
@@ -68,47 +70,25 @@ function ComplainTable() {
       cellClassName: "actions",
       align: "center",
       headerAlign: "center",
-      getActions: ({ id }) => {
-        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-
-        if (isInEditMode) {
-          return [
-            <GridActionsCellItem
-              key={`save-${id}`}
-              icon={<SaveIcon />}
-              label="Save"
-              sx={{ color: "primary.main" }}
-              onClick={handleSaveClick(id)}
-            />,
-            <GridActionsCellItem
-              key={`cancel-${id}`}
-              icon={<CancelIcon />}
-              label="Cancel"
-              className="textPrimary"
-              onClick={handleCancelClick(id)}
-              color="inherit"
-            />,
-          ];
-        }
-
+      getActions: (params) => {
+        const { id, tracking_id } = params.row;
         return [
           <GridActionsCellItem
-            key={`edit-${id}`}
+            key={`show-${id}`}
             icon={<VisibilityIcon />}
-            label="Edit"
+            label="Show"
             className="textPrimary"
-            onClick={handleEditClick(id)}
+            onClick={() => handleShowDetails(tracking_id)} // Pass tracking_id instead of id
             color="inherit"
           />,
-          <div key={`show-${id}`}>
+          <div key={`edit-${id}`}>
             <GridActionsCellItem
               icon={<EditIcon />}
-              label="Show"
+              label="Edit"
               className="textPrimary"
               onClick={() => handleOpenModal(id)}
               color="inherit"
             />
-
             <DetailsModal
               open={modalOpen}
               handleClose={handleCloseModal}
@@ -183,6 +163,10 @@ function ComplainTable() {
       event.defaultMuiPrevented = true;
     }
   };
+
+  const handleShowDetails=(id)=>{
+    navigate(`/complain-details/${id}`)
+  }
 
   const handleOpenModal = async (id) => {
     try {
@@ -278,8 +262,9 @@ function ComplainTable() {
 
   return (
     <Box
+    // TODO paginate and height
       sx={{
-        height: 500,
+        height: 580,
         width: "100%",
         margin: "10px",
         "& .actions": {

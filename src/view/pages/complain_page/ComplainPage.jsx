@@ -22,31 +22,20 @@ function ComplainPage() {
 
   const getSummary = async (event) => {
     const value = event.target.value;
-    setText(value); // Assuming setText is defined to handle the input state
-
-    setLoading(true);
-    setError(''); // Clear previous errors
+    setText(value);
+    setError(''); 
 
     try {
       // Send the POST request with FormData
-      const response = await fetch("http://114.130.119.192/api/complaints/", {
+      const response = await fetch("http://114.130.116.176/api/summarizer/", {
         method: "POST",
         body: JSON.stringify({
-          "paragraph": value,
+          "content": value,
         }),
         headers: {
           "Content-Type": 'application/json',
         }
       });
-
-      // const response = await axios.post('http://114.130.116.176/generate-subject', {
-      //   "paragraph": value,
-      // }, {
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   }
-      // })
-
       // Check if the response is not OK
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -58,6 +47,7 @@ function ComplainPage() {
       // Check if result is received and handle accordingly
       if (result) {
         console.log('Summary received:', result);
+        setTitle(result);
         // Perform actions with the result if needed
       }
 
@@ -65,9 +55,6 @@ function ComplainPage() {
       // Handle and display error
       setError('Failed to fetch summary. Please try again.');
       console.error('Error:', err);
-    } finally {
-      // Set loading to false after request completes
-      setLoading(false);
     }
   };
 
