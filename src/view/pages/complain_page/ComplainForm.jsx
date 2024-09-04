@@ -4,6 +4,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 
 import reloadimg from "../../../assets/captcha.png";
 import { LoadCanvasTemplateNoReload } from "react-simple-captcha";
+import BeatLoader from "react-spinners/ClipLoader";
 
 function ComplainForm({
   offices,
@@ -269,11 +270,19 @@ function ComplainForm({
             </div>
 
             <div className="flex items-center justify-end py-2 mt-5">
-              <button
+            <button
                 type="submit"
-                className="custom-bold-font md:text-[16px] py-3.5 px-4 text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800 w-full text-center"
+                className="custom-bold-font md:text-[16px] py-3.5 px-4 text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800 w-full text-center flex items-center justify-center"
+                disabled={loading}
               >
-                অভিযোগ দাখিল করুন
+                {loading ? (
+                  <>
+                    <BeatLoader color="#fff" size={20} />
+                    <span className="ms-2">Submitting...</span>
+                  </>
+                ) : (
+                  "অভিযোগ দাখিল করুন"
+                )}
               </button>
             </div>
           </div>

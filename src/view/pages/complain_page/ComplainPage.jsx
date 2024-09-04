@@ -142,15 +142,15 @@ function ComplainPage() {
     }
 
 
+    if (validateCaptcha(captchaValue)) {
+      setCaptchaError(false);
+    } else {
+      setCaptchaError(true);
+      return;
+    }
+    setLoading(true);
+    
     try {
-      if (validateCaptcha(captchaValue)) {
-        setCaptchaError(false);
-      } else {
-        setCaptchaError(true);
-        return;
-      }
-
-
       const response = await fetch("http://114.130.119.192/api/complaints/", {
         method: "POST",
         body: JSON.stringify({
@@ -178,6 +178,9 @@ function ComplainPage() {
     } catch (error) {
       console.error("Error:", error);
       // Handle error (e.g., show an error message)
+    }
+    finally{
+      setLoading(false);
     }
   };
 

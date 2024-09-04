@@ -8,7 +8,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 
 const style = {
@@ -32,35 +32,10 @@ const imageStyle = {
   objectFit: "cover", // Ensures the image scales without distorting its aspect ratio
 };
 
-function DetailsModal({ open, handleClose, data }) {
-  const [statusOptions, setStatusOptions] = useState([]);
+function DetailsModal({ open, handleClose, usersOptions, officesOptions, statusOptions, data }) {
   const [selectedStatus, setSelectedStatus] = useState("");
-  const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState("");
   const [comment, setComment] = useState(""); // State for comment input
-
-  useEffect(() => {
-    const getStatus = async () => {
-      try {
-        const response = await axios.get("http://114.130.119.192/api/status/");
-        setStatusOptions(response.data);
-      } catch (error) {
-        console.error("Error fetching status options:", error);
-      }
-    };
-
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get("http://114.130.119.192/api/users/");
-        setUsers(response.data);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
-
-    fetchUsers();
-    getStatus();
-  }, []);
 
   const handleStatusChange = (event) => {
     setSelectedStatus(event.target.value);
@@ -74,7 +49,6 @@ function DetailsModal({ open, handleClose, data }) {
     setComment(event.target.value);
   };
 
-
   // submit the form
   const handleSubmitForm = async () => {
     try {
@@ -82,9 +56,9 @@ function DetailsModal({ open, handleClose, data }) {
         "http://114.130.119.192/api/complaint-progress-submit/",
         {
           tracking_id: data.tracking_id,
-          status_id: selectedStatus,
+          status_id: selectedStatus !== "" ? selectedStatus : data.status,
           assigned_person_id: selectedUser,
-          assigned_office_id: data.assigned_office_id, // Use appropriate value from `data`
+          // assigned_office_id: data.assigned_office_id,
           comment: comment,
         },
         {
@@ -97,7 +71,7 @@ function DetailsModal({ open, handleClose, data }) {
       // Handle successful response
       if (response.status === 200) {
         console.log("Form submitted successfully:", response.data);
-        handleClose()
+        handleClose();
         // Optionally, you can display a success message or reset form fields
       }
     } catch (error) {
@@ -124,100 +98,142 @@ function DetailsModal({ open, handleClose, data }) {
     >
       <Fade in={open}>
         <Box sx={style}>
-          <Box sx={{ gridColumn: "span 3", textAlign: "center" }}>
+          <Box sx={{ gridColumn: "span 3" }}>
             <Typography id="transition-modal-title" variant="h6" component="h2">
-              <span className="text-base text-gray-500">শিরোনাম</span> <br />
-              <span className="text-lg font-semibold text-gray-700">
+              <span className="text-gray-600 custom-font">শিরোনামঃ </span>
+              <span className="text-gray-700 custom-bold-font">
                 {data.title}
               </span>
             </Typography>
           </Box>
+          <Box sx={{ gridColumn: "span 3", gap: "20px", display: "flex" }}>
+            <Typography id="transition-modal-title" variant="h6" component="h2">
+              <span className="text-base text-gray-600 custom-font">
+                সার-সংক্ষেপ
+              </span>{" "}
+              <br />
+              <span className="custom-font text-gray-800">{data.content}</span>
+            </Typography>
 
-          <Box sx={{ width: "500px", marginRight: "30px" }}>
-            <span className="text-base text-gray-500">সার-সংক্ষেপ</span> <br />
-            <Typography>{data.content}</Typography>
-
-            <Box sx={{ marginTop: "50px" }}>
-              <span>মন্তব্যঃ </span> <br />
-              <textarea
-                className="bg-slate-200 rounded-md p-1"
-                name="comment"
-                value={comment}
-                onChange={handleCommentChange}
-              ></textarea>
-            </Box>
-          </Box>
-
-          <Box>
-            <span className="text-base text-gray-500">
-              ট্র্যাকিং নম্বরঃ{" "}
-              <span className="text-gray-700">{data.tracking_id}</span>
-            </span>
-            <br />
-
-            <div className="text-base text-gray-700 my-3">
-              দপ্তরঃ {data.office}
-            </div>
-
-            <span className="text-base text-gray-500">জমার তারিখঃ </span>
-            <span className="text-gray-700">
-              {new Date(data.created_at).toLocaleString()}
-            </span>
-
-            <div className="text-base text-gray-500 my-3">
-              অভিযোগকারীর তথ্যঃ{" "}
-            </div>
-            <span className="text-gray-700">{data.complainer_info}</span>
-
-            <FormControl sx={{ minWidth: 220 }} size="small">
-              <InputLabel id="user-select-label">
-                দায়িত্বপ্রাপ্ত-কর্মকর্তা
-              </InputLabel>
-              <Select
-                labelId="user-select-label"
-                id="user-select"
-                value={selectedUser}
-                label="দায়িত্বপ্রাপ্ত-কর্মকর্তা"
-                onChange={handleUserChange}
+            <Box
+              sx={{
+                borderLeft: "1px dashed gray",
+                borderRight: "1px dashed gray",
+                padding: "0 10px",
+                width: "525px",
+              }}
+            >
+              <Typography
+                id="transition-modal-title"
+                variant="h6"
+                component="h2"
               >
-                {users.map((user) => (
-                  <MenuItem key={user.id} value={user.id}>
-                    {user.mobile_number}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
+                <div className="text-base text-gray-600 custom-font mb-1">
+                  ট্র্যাকিং নম্বরঃ{" "}
+                  <span className="text-blue-700 font-semibold">
+                    {data.tracking_id}
+                  </span>
+                </div>
 
-          <Box>
-            <Box sx={{ minWidth: 120 }}>
-              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                <div className="text-base text-gray-600 custom-font mb-1">
+                  জমার তারিখঃ{" "}
+                  <span className="text-gray-700">
+                    {new Date(data.created_at).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </span>
+                </div>
+
+                <div className="text-base text-gray-600 custom-font mb-1">
+                  অভিযোগকারীর তথ্যঃ{" "}
+                  <span className="text-gray-700 custom-bold-font">
+                    {data.complainer_info}
+                  </span>
+                </div>
+
+                <div className="text-base text-gray-600 custom-font mb-1">
+                  সংযুক্ত ফাইলঃ {" "}
+                  {data.file && (
+                    <img
+                      src={data.file}
+                      alt="Complaint File"
+                      style={imageStyle}
+                    />
+                  )}
+                </div>
+              </Typography>
+            </Box>
+
+            <Box>
+              <div className="custom-font">
+                <span className="text-gray-800">মন্তব্যঃ </span> <br />
+                <textarea
+                  className="bg-slate-200 rounded-md p-1"
+                  name="comment"
+                  value={comment}
+                  onChange={handleCommentChange}
+                ></textarea>
+              </div>
+
+              <FormControl sx={{ minWidth: 214, marginTop: 2 }} size="small">
+                <InputLabel id="user-select-label">দপ্তর</InputLabel>
+                <Select
+                  labelId="user-select-label"
+                  id="user-select"
+                  value={selectedUser || data.office}
+                  label="দপ্তর"
+                  onChange={handleUserChange}
+                >
+                  {officesOptions.map((office) => (
+                    <MenuItem key={office.id} value={office.id}>
+                      {office.name_Bn}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <FormControl sx={{ minWidth: 214, marginTop: 2 }} size="small">
+                <InputLabel id="user-select-label">
+                  দায়িত্বপ্রাপ্ত-কর্মকর্তা
+                </InputLabel>
+                <Select
+                  labelId="user-select-label"
+                  id="user-select"
+                  value={selectedUser}
+                  label="দায়িত্বপ্রাপ্ত-কর্মকর্তা"
+                  onChange={handleUserChange}
+                >
+                  {usersOptions.map((user) => (
+                    <MenuItem key={user.id} value={user.id}>
+                      {user.mobile_number}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <FormControl sx={{ marginTop: 2, minWidth: 214 }} size="small">
                 <InputLabel id="demo-select-small-label">স্ট্যাটাস</InputLabel>
                 <Select
                   labelId="demo-select-small-label"
                   id="demo-select-small"
-                  value={selectedStatus}
+                  value={selectedStatus || data.status}
                   label="complain_status"
                   onChange={handleStatusChange}
                 >
                   {statusOptions.map((status) => (
                     <MenuItem key={status.id} value={status.id}>
-                      {status.name} {/* Replace with appropriate field name */}
+                      {status.name}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
             </Box>
-            <div className="mt-8">
-              <span className="text-gray-500">সংযুক্ত ফাইলঃ </span>
-              {data.file && (
-                <img src={data.file} alt="Complaint File" style={imageStyle} />
-              )}
-            </div>
           </Box>
 
-          <Box sx={{ gridColumn: "span 3", textAlign: "center" }}>
-            <Button onClick={handleSubmitForm} variant="outlined">
+          <Box sx={{ gridColumn: "span 3", textAlign: "end", marginTop:"30px" }}>
+            <Button onClick={handleSubmitForm} variant="contained">
               সাবমিট
             </Button>
           </Box>

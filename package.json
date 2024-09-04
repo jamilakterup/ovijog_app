@@ -32,6 +32,7 @@
     "react-hot-toast": "^2.4.1",
     "react-router-dom": "^6.26.1",
     "react-simple-captcha": "^9.3.1",
+    "react-spinners": "^0.14.1",
     "react-toastify": "^10.0.5",
     "socket.io-client": "^4.7.5",
     "sort-by": "^0.0.2",

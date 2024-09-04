@@ -12,6 +12,7 @@ import {
   GridRowEditStopReasons,
 } from '@mui/x-data-grid';
 import DetailsModal from './DetailsModal';
+import axios from 'axios';
 
 
 
@@ -20,25 +21,49 @@ function ComplainTable() {
   const [modalOpen, setModalOpen] = useState(false);
   const [complaintData, setComplaintData] = useState(null);
   const [rowModesModel, setRowModesModel] = useState({});
+  const [statusMap, setStatusMap] = useState({});
+  const [statusOptions, setStatusOptions] = useState([]);
+  const [usersOptions, setUsersOptions] = useState([]);
+  const [officesOptions, setOfficesOptions] = useState([]);
   const scrollerRef = useRef(null);
 
+  // Function to get the class based on status ID
+  const getStatusClass = (statusId) => {
+    switch (statusId) {
+      case 1: return 'bg-yellow-400 text-yellow-800';
+      case 2: return 'bg-red-400 text-red-800';
+      case 3: return 'bg-green-400 text-green-800';
+      default: return 'bg-gray-400 text-gray-800';
+    }
+  };
 
   const columns = [
-    { field: 'title', headerName: 'Title', width: 200, editable: true },
-    { field: 'complainer_info', headerName: 'Complainer Info', width: 180, editable: true },
-    { field: 'content', headerName: 'Content', width: 120, editable: true },
-    { field: 'file', headerName: 'File', width: 120 },
-    { field: 'office', headerName: 'Office', width: 200, editable: true },
-    { field: 'tracking_id', headerName: 'Tracking ID', width: 120 },
-    { field: 'status', headerName: 'Status', width: 90, editable: true },
+    { field: 'title', headerName: 'শিরোনাম', width: 300 },
+    { field: 'office_name', headerName: 'দপ্তর', width: 300 },
+    { field: 'tracking_id', headerName: 'ট্র্যাকিং নম্বর', width: 220 },
+    {
+      field: 'status',
+      headerName: 'স্ট্যাটাস',
+      width: 200,
+      renderCell: (params) => {
+        const statusName = statusMap[params.value];
+        const statusClass = getStatusClass(params.value); // Function to get the class based on status ID
+
+        return (
+          <span className={`text-xs font-medium me-2 px-2.5 py-0.5 rounded ${statusClass}`}>
+            {statusName || 'Unknown'}
+          </span>
+        );
+      },
+    },
     {
       field: 'actions',
       type: 'actions',
-      headerName: 'Actions',
+      headerName: 'অ্যাকশান',
       width: 120,
       cellClassName: 'actions',
-      align: 'right',
-      headerAlign: 'right',
+      align: 'center',
+      headerAlign: 'center',
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
 
@@ -63,9 +88,17 @@ function ComplainTable() {
         }
 
         return [
+          <GridActionsCellItem
+          key={`edit-${id}`}
+          icon={<VisibilityIcon />}
+          label="Edit"
+          className="textPrimary"
+          onClick={handleEditClick(id)}
+          color="inherit"
+        />,
           <div key={`show-${id}`}>
             <GridActionsCellItem
-              icon={<VisibilityIcon />}
+              icon={<EditIcon/>}
               label="Show"
               className="textPrimary"
               onClick={() => handleOpenModal(id)}
@@ -75,17 +108,12 @@ function ComplainTable() {
             <DetailsModal
               open={modalOpen}
               handleClose={handleCloseModal}
+              statusOptions={statusOptions}
+              usersOptions={usersOptions}
+              officesOptions={officesOptions}
               data={complaintData}
             />
           </div>,
-          <GridActionsCellItem
-            key={`edit-${id}`}
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleEditClick(id)}
-            color="inherit"
-          />,
           <GridActionsCellItem
             key={`delete-${id}`}
             icon={<DeleteIcon />}
@@ -99,30 +127,42 @@ function ComplainTable() {
   ];
 
 
-  const fetchComplaintData = async (id) => {
-    try {
-      const response = await fetch(`http://114.130.119.192/api/complaints/${id}/`);
-      const data = await response.json();
-      setComplaintData(data);
-      setModalOpen(true);
-    } catch (error) {
-      console.error('Error fetching complaint data:', error);
-    }
-  };
 
 
+// fetch all complains status and users
   useEffect(() => {
-    // Fetch data from the API
-    fetch('http://114.130.119.192/api/complaints/')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => setRows(data))
-      .catch(error => console.error('Error fetching data:', error));
+    const fetchData = async () => {
+      
+      try {
+        // Fetch complaints data
+        const complaintsResponse = await axios.get("http://114.130.119.192/api/complaints/");
+        setRows(complaintsResponse.data);
+
+        // Fetch status data
+        const statusResponse = await axios.get("http://114.130.119.192/api/status/");
+        const statusMapping = statusResponse.data.reduce((map, status) => {
+          map[status.id] = status.name;
+          return map;
+        }, {});
+        setStatusMap(statusMapping);
+        setStatusOptions(statusResponse.data); // Assuming you need this elsewhere
+
+        // Fetch users data
+        const usersResponse = await axios.get("http://114.130.119.192/api/users/");
+        setUsersOptions(usersResponse.data);
+
+        // Fetch offices data
+        const officeResponse = await axios.get("http://114.130.119.192/api/offices/");
+        setOfficesOptions(officeResponse.data);
+
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
   }, []);
+// end fetch all complains status and users
 
 
   useEffect(() => {
@@ -138,8 +178,26 @@ function ComplainTable() {
   };
 
 
-  const handleOpenModal = (id) => {
-    fetchComplaintData(id);
+  const handleOpenModal = async(id) => {
+      try {
+        const response = await fetch(`http://114.130.119.192/api/complaints/${id}/`);
+        const data = await response.json();
+        setComplaintData(data);
+        setModalOpen(true);
+
+        if (data.office) {
+          const res= await axios.post('http://114.130.119.192/api/users/office/',{
+            "office_id": data.office
+          })
+          // console.log(res)
+          // Set offices data
+          setOfficesOptions(officeResponse.data);
+        const officeResponse = await axios.get("http://114.130.119.192/api/offices/");
+        setOfficesOptions(officeResponse.data);
+        }
+      } catch (error) {
+        console.error('Error fetching complaint data:', error);
+      }
   };
 
   const handleCloseModal = () => {
@@ -221,7 +279,7 @@ function ComplainTable() {
       }}
       ref={scrollerRef}
     >
-      <h1 className='text-3xl text-gray-700 font-semibold m-4'>অভিযোগ সমূহ</h1>
+      <h1 className='text-3xl font-semibold m-4'>Complains</h1>
       <DataGrid
         rows={rows}
         columns={columns}

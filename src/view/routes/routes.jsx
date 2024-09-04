@@ -6,8 +6,14 @@ import ComplainTable from "../pages/dashboard/complain/ComplainTable";
 import TrackingPage from "../pages/complain_page/TrackingPage";
 import Login from "../pages/login-registration/Login";
 import Registration from "../pages/login-registration/Registration";
+import TestLayout from "../layouts/TestLayout";
 
-const router = createBrowserRouter([
+const routes = createBrowserRouter([
+    {
+        path: '/test',
+        element: <TestLayout />,
+        errorElement: '404'
+    },
     {
         path: '/',
         element: <ComplainerLayout />,
@@ -45,4 +51,4 @@ const router = createBrowserRouter([
     }
 ]);
 
-export default router;
+export default routes;

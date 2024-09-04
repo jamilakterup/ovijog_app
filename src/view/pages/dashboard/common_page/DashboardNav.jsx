@@ -47,7 +47,7 @@ function DashboardNav({ isOpen, setIsOpen }) {
   // main function will return::
   return (
     <nav className="bg-white border-b border-black/10">
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto px-4 py-2">
         <div className="w-full md:w-44 flex justify-between">
           <Link to="/" className="flex items-center space-x-3 rtl:space-x-reverse">
             <img
