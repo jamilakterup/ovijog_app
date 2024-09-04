@@ -32,16 +32,25 @@ const imageStyle = {
   objectFit: "cover", // Ensures the image scales without distorting its aspect ratio
 };
 
-function DetailsModal({ open, handleClose, usersOptions, officesOptions, statusOptions, data }) {
+function DetailsModal({ open, handleClose, usersOptions, setUsersOptions, officesOptions, statusOptions, data }) {
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedUser, setSelectedUser] = useState("");
+  const [selectedOffice, setSelectedOffice] = useState("");
   const [comment, setComment] = useState(""); // State for comment input
 
   const handleStatusChange = (event) => {
     setSelectedStatus(event.target.value);
   };
 
-  const handleUserChange = (event) => {
+  const handleOfficeChange= async(event)=>{
+    const usersResponse = await axios.post("http://114.130.119.192/api/users/office/",{
+      "office_id":event.target.value,
+    });
+    setUsersOptions(usersResponse.data);
+    setSelectedOffice(event.target.value);
+  }
+
+  const handleUserChange = async(event) => {
     setSelectedUser(event.target.value);
   };
 
@@ -58,7 +67,7 @@ function DetailsModal({ open, handleClose, usersOptions, officesOptions, statusO
           tracking_id: data.tracking_id,
           status_id: selectedStatus !== "" ? selectedStatus : data.status,
           assigned_person_id: selectedUser,
-          // assigned_office_id: data.assigned_office_id,
+          assigned_office_id: selectedOffice,
           comment: comment,
         },
         {
@@ -182,9 +191,9 @@ function DetailsModal({ open, handleClose, usersOptions, officesOptions, statusO
                 <Select
                   labelId="user-select-label"
                   id="user-select"
-                  value={selectedUser || data.office}
+                  value={selectedOffice || data.office}
                   label="দপ্তর"
-                  onChange={handleUserChange}
+                  onChange={handleOfficeChange}
                 >
                   {officesOptions.map((office) => (
                     <MenuItem key={office.id} value={office.id}>
