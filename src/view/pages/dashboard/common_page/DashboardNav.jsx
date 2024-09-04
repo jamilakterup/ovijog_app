@@ -1,6 +1,6 @@
 import ClearIcon from "@mui/icons-material/Clear";
 import PropTypes from "prop-types";
-import bccLogo from "../../../../assets/bcc_logo.png";
+import bccLogo from "../../../../assets/ovijog.png";
 import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
