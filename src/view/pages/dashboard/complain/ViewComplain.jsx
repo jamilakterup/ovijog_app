@@ -135,7 +135,7 @@ function ViewComplain() {
           <span className="custom-font">{dataArray[0].complaint_content}</span>
         </div>
       ) : (
-        <div className="font-medium text-center md:text-3xl mx-auto w-full my-72">
+        <div className="custom-font font-medium text-center md:text-3xl mx-auto w-full my-60">
           আপনার অভিযোগটি প্রক্রিয়াধীন আছে!!
         </div>
       )}
