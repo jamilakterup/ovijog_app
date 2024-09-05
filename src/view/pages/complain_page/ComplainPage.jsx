@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import ComplainForm from "./ComplainForm";
 import { loadCaptchaEnginge, validateCaptcha } from "react-simple-captcha";
 import { useNavigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
-import axios from "axios";
 
 function ComplainPage() {
   const [offices, setOffices] = useState([]);
@@ -14,7 +12,6 @@ function ComplainPage() {
   const [captchaValue, setCaptchaValue] = useState("");
   const [captchaError, setCaptchaError] = useState(false);
   const [text, setText] = useState('');
-  const [summary, setSummary] = useState('');
   const [title, setTitle] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -190,7 +187,6 @@ function ComplainPage() {
         captchaError={captchaError}
         text={text}
         setText={setText}
-        summary={summary}
         title={title}
         setTitle={setTitle}
         loading={loading}
