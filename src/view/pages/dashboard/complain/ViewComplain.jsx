@@ -113,13 +113,13 @@ function ViewComplain() {
                       <br />
                       <span>
                         {" "}
-                        হস্তানান্তরের তারিখ:{" "}
+                        হস্তানন্তরের তারিখ:{" "}
                         <span className="text-blue-700">{data.created_at}</span>{" "}
                       </span>
                       <br />
                       <span>
                         {" "}
-                        নোট:{" "}
+                        মন্তব্য:{" "}
                         <span className="text-blue-700">{data.assigned_person_comment}</span>{" "}
                       </span>
                   </div>
