@@ -12,6 +12,8 @@ export const apiSlice = createApi({
         // // mode:'no-cors'
     }),
     endpoints: (builder) => ({
-
+        // http://10.106.15.243/doc/
     })
 })
+
+export const { useSomeEndpointQuery } = apiSlice;

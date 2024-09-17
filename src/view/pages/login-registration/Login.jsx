@@ -92,14 +92,16 @@ export default function Login() {
       setPhoneErrorMessage("");
     }
 
-    if (!password || password.length < 8) {
-      setPasswordError(true);
-      setPasswordErrorMessage("Password must be at least 8 characters long.");
-      isValid = false;
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMessage("");
-    }
+    // if (!password || password.length < 8) {
+    //   setPasswordError(true);
+    //   setPasswordErrorMessage("Password must be at least 8 characters long.");
+    //   isValid = false;
+    // } else {
+    //   setPasswordError(false);
+    //   setPasswordErrorMessage("");
+    // }
+
+
 
     try {
       // const response = await fetch(
@@ -116,14 +118,14 @@ export default function Login() {
       //   }
       // );
 
-      const res = await login({
+      const response = await login({
         mobile_number: phone,
         password: password
       })
       
 
-console.log(res, data)
-return;
+console.log('res dta:',response.data)
+// return;
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -135,7 +137,7 @@ return;
         navigate(`/`);
       }
     } catch (error) {
-      console.log(error);
+      console.log('erro',error);
     }
 
     return isValid;

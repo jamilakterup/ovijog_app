@@ -135,7 +135,7 @@ export default function Registration() {
             body: JSON.stringify({
               mobile_number: phone,
               password: password,
-              "email": "example@gmail.com",
+              "email": "example1@gmail.com",
               "last_name": ".",
               first_name: name,
               office_id: selectedOffice.id,

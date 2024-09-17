@@ -8,6 +8,15 @@ import Login from "../pages/login-registration/Login";
 import Registration from "../pages/login-registration/Registration";
 import TestLayout from "../layouts/TestLayout";
 import ViewComplain from "../pages/dashboard/complain/ViewComplain";
+// ai route a hobena?
+
+const PrivateRoute = ({children}) => {
+    return (
+    <>
+        {children}
+    </>
+    )
+}
 
 const routes = createBrowserRouter([
     {
@@ -17,7 +26,7 @@ const routes = createBrowserRouter([
     },
     {
         path: '/',
-        element: <ComplainerLayout />,
+        element: <PrivateRoute><ComplainerLayout /></PrivateRoute>,
         errorElement: '404'
     },
     {
