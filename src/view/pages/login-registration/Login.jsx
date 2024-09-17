@@ -16,6 +16,7 @@ import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import { IconButton, InputAdornment, OutlinedInput } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLoginMutation } from "../../redux/auth/authApi";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -62,6 +63,9 @@ export default function Login() {
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => event.preventDefault();
 
+
+  const [ login, { data } ] = useLoginMutation();
+
   useEffect(() => {
     // Check if there is a preferred mode in localStorage
     const savedMode = localStorage.getItem("themeMode");
@@ -98,19 +102,28 @@ export default function Login() {
     }
 
     try {
-      const response = await fetch(
-        "http://114.130.119.192/api/users/login/",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            mobile_number: phone,
-            password: password
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      // const response = await fetch(
+      //   "http://114.130.119.192/api/users/login/",
+      //   {
+      //     method: "POST",
+      //     body: JSON.stringify({
+      //       mobile_number: phone,
+      //       password: password
+      //     }),
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //   }
+      // );
+
+      const res = await login({
+        mobile_number: phone,
+        password: password
+      })
+      
+
+console.log(res, data)
+return;
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
