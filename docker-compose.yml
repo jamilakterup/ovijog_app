@@ -1,0 +1,23 @@
+services:
+
+  frontend:
+    build: ./
+    container_name: frontend
+    command: sh -c "npm install && npm start"
+
+    ports:
+      - "3000:3000"
+    networks:
+      - network-frontend
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  network-frontend:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.13.0/27
