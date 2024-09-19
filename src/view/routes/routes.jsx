@@ -8,6 +8,7 @@ import Login from "../pages/login-registration/Login";
 import Registration from "../pages/login-registration/Registration";
 import TestLayout from "../layouts/TestLayout";
 import ViewComplain from "../pages/dashboard/complain/ViewComplain";
+import UsersCard from "../pages/dashboard/users/UsersCard";
 // ai route a hobena?
 
 const PrivateRoute = ({children}) => {
@@ -61,7 +62,11 @@ const routes = createBrowserRouter([
             {
                 path: 'complain-table',
                 element: <ComplainTable />
-            }
+            },
+            {
+                path: 'users',
+                element: <UsersCard/>
+            },
         ]
     }
 ]);

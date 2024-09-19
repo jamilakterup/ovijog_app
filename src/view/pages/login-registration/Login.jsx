@@ -63,8 +63,7 @@ export default function Login() {
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => event.preventDefault();
 
-
-  const [ login, { data } ] = useLoginMutation();
+  const [login, { data }] = useLoginMutation();
 
   useEffect(() => {
     // Check if there is a preferred mode in localStorage
@@ -92,40 +91,14 @@ export default function Login() {
       setPhoneErrorMessage("");
     }
 
-    // if (!password || password.length < 8) {
-    //   setPasswordError(true);
-    //   setPasswordErrorMessage("Password must be at least 8 characters long.");
-    //   isValid = false;
-    // } else {
-    //   setPasswordError(false);
-    //   setPasswordErrorMessage("");
-    // }
-
-
-
     try {
-      // const response = await fetch(
-      //   "http://114.130.119.192/api/users/login/",
-      //   {
-      //     method: "POST",
-      //     body: JSON.stringify({
-      //       mobile_number: phone,
-      //       password: password
-      //     }),
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //   }
-      // );
-
       const response = await login({
         mobile_number: phone,
-        password: password
-      })
-      
+        password: password,
+      });
 
-console.log('res dta:',response.data)
-// return;
+      console.log("res dta:", response.data);
+      // return;
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -137,7 +110,7 @@ console.log('res dta:',response.data)
         navigate(`/`);
       }
     } catch (error) {
-      console.log('erro',error);
+      console.log("erro", error);
     }
 
     return isValid;
