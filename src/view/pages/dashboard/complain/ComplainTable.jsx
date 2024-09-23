@@ -113,43 +113,44 @@ function ComplainTable() {
 
   // fetch all complains status and users
   useEffect(() => {
-    const fetchData = async () => {
+    const token = localStorage.getItem('auth');
+    let parsedToken = null;
+  
+    if (token) {
       try {
-        // Fetch complaints data
-        const complaintsResponse = await axios.get(
-          "http://114.130.119.192/api/complaints/"
-        );
-        setRows(complaintsResponse.data);
-
-        // Fetch status data
-        const statusResponse = await axios.get(
-          "http://114.130.119.192/api/status/"
-        );
-        const statusMapping = statusResponse.data.reduce((map, status) => {
-          map[status.id] = status.name;
-          return map;
-        }, {});
-        setStatusMap(statusMapping);
-        setStatusOptions(statusResponse.data); // Assuming you need this elsewhere
-
-        // Fetch users data
-        const usersResponse = await axios.get(
-          "http://114.130.119.192/api/users/"
-        );
-        setUsersOptions(usersResponse.data);
-
-        // Fetch offices data
-        const officeResponse = await axios.get(
-          "http://114.130.119.192/api/offices/"
-        );
-        setOfficesOptions(officeResponse.data);
+        parsedToken = JSON.parse(token);
+        // console.log('Access Token:', parsedToken.accessToken);
+        // console.log('User Info:', parsedToken.user);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        // console.error('Error parsing token:', error);
+      }
+    }
+  
+    const fetchData = async () => {
+      if (parsedToken) { // Check if parsedToken is available
+        try {
+          // Fetch complaints data
+          const complaintsResponse = await axios.get(
+            "http://114.130.119.192/api/complaint/view/",
+            {
+              headers: {
+                Authorization: `Bearer ${parsedToken.accessToken}`,
+              },
+            }
+          );
+  
+          setRows(complaintsResponse.data);
+        } catch (error) {
+          console.error('Error fetching complaints:', error);
+        }
+      } else {
+        console.log('No valid token found.');
       }
     };
-
-    fetchData();
-  }, []);
+  
+    fetchData(); // Call the fetchData function
+  }, []); // Empty dependency array to run once on mount
+  
   // end fetch all complains status and users
 
   useEffect(() => {

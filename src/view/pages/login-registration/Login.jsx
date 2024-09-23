@@ -17,6 +17,8 @@ import { IconButton, InputAdornment, OutlinedInput } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../redux/auth/authApi";
+import SyncIcon from '@mui/icons-material/Sync';
+
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -63,26 +65,21 @@ export default function Login() {
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => event.preventDefault();
 
+  const [login, { data, isLoading, error: responseError }] =
+    useLoginMutation();
 
-  const [ login, { data } ] = useLoginMutation();
 
   useEffect(() => {
-    // Check if there is a preferred mode in localStorage
-    const savedMode = localStorage.getItem("themeMode");
-    if (savedMode) {
-      setMode(savedMode);
-    } else {
-      // If no preference is found, it uses system preference
-      const systemPrefersDark = window.matchMedia(
-        "(prefers-color-scheme: dark)"
-      ).matches;
-      setMode(systemPrefersDark ? "dark" : "light");
+    if (responseError?.data) {
+      setError(responseError.data);
     }
-  }, []);
+    if (data?.token && data?.user) {
+      navigate("/dashboard/home");
+    }
+  }, [data, responseError, navigate]);
 
-  const validateInputs = async () => {
-    let isValid = true;
 
+  const loginHandler = (e) => {
     if (!phone) {
       setPhoneError(true);
       setPhoneErrorMessage("Please enter your phone number");
@@ -92,42 +89,16 @@ export default function Login() {
       setPhoneErrorMessage("");
     }
 
-    if (!password || password.length < 8) {
-      setPasswordError(true);
-      setPasswordErrorMessage("Password must be at least 8 characters long.");
-      isValid = false;
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMessage("");
-    }
-
-    try {
-
-      const res = await login({
-        mobile_number: phone,
-        password: password
-      })
-      
-      if (!res.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const result = await res.json();
-
-      if (result) {
-        navigate(`/`);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-
-    return isValid;
+    login({
+      mobile_number: phone,
+      password: password,
+    })
   };
+
 
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline enableColorScheme />
-      <SignInContainer direction="column" justifyContent="space-between">
         <Card variant="outlined">
           <h2 className="text-4xl custom-font">লগইন করুন</h2>
 
@@ -181,12 +152,16 @@ export default function Login() {
           />
 
           <Button
-            type="submit"
             fullWidth
             variant="contained"
-            onClick={validateInputs}
+            onClick={loginHandler}
+            disabled={isLoading}
           >
-            <span className="custom-font text-xl">লগইন</span>
+            {isLoading ? (
+              <SyncIcon className="animate-spin"/>
+            ) : (
+              <span className="custom-font text-xl">লগইন</span>
+            )}
           </Button>
 
           <span className="text-center custom-font">
@@ -200,7 +175,6 @@ export default function Login() {
             </Link>
           </span>
         </Card>
-      </SignInContainer>
     </ThemeProvider>
   );
 }

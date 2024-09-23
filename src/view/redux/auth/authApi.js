@@ -1,39 +1,67 @@
 import { apiSlice } from "../api/apiSlice";
-import { userLoggedIn } from "./authSlice";
+import { userLoggedIn, userRegistered } from "./authSlice";
 
 export const authApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        login: builder.mutation({
+        register: builder.mutation({
             query: (data) => ({
-                url: "users/login",
+                url: "/users/register/",
                 method: "POST",
                 body: data,
             }),
             async onQueryStarted(arg, { queryFulfilled, dispatch }) {
                 try {
-                    const response = await queryFulfilled;
+                    const result = await queryFulfilled;
 
-                    if (response?.data) {
-                        const { access_token, user } = response.data;
+                    localStorage.setItem(
+                        "auth",
+                        JSON.stringify({
+                            accessToken: result.data.accessToken,
+                            user: result.data.user,
+                        })
+                    );
 
-                        // Store in localStorage
-                        localStorage.setItem('auth', JSON.stringify({
-                            access_token,
-                            user,
-                        }));
-
-                        // Dispatch action to update the state
-                        dispatch(userLoggedIn({
-                            access_token,
-                            user,
-                        }));
-                    }
-                } catch (error) {
-                    console.error("Login failed: ", error);
+                    dispatch(
+                        userRegistered({
+                            accessToken: result.data.accessToken,
+                            user: result.data.user,
+                        })
+                    );
+                } catch (err) {
+                    console.error(err);
                 }
-            }
-        })
-    })
+            },
+        }),
+
+        login: builder.mutation({
+            query: (data) => ({
+                url: "/users/login/",
+                method: "POST",
+                body: data,
+            }),
+            async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+                try {
+                    const result = await queryFulfilled;
+                    localStorage.setItem(
+                        "auth",
+                        JSON.stringify({
+                            accessToken: result?.data?.token?.access,
+                            user: result?.data?.user,
+                        })
+                    );
+
+                    dispatch(
+                        userLoggedIn({
+                            accessToken: result?.data?.token?.access,
+                            user: result?.data?.user,
+                        })
+                    );
+                } catch (err) {
+                    // console.error(err);
+                }
+            },
+        }),
+    }),
 });
 
-export const { useLoginMutation } = authApi;
+export const { useLoginMutation, useRegisterMutation } = authApi;

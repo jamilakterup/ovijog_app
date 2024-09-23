@@ -47,6 +47,9 @@ export default function Registration() {
   const [phone, setPhone] = useState("");
   const [phoneError, setPhoneError] = useState(false);
   const [phoneErrorMessage, setPhoneErrorMessage] = useState("");
+  const [email, setEmial] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const [emailErrorMessage, setEmailErrorMessage] = useState("");
   const [designation, setDesignation] = useState("");
   const [designationError, setDesignationError] = useState(false);
   const [designationErrorMessage, setDesignationErrorMessage] = useState("");
@@ -88,6 +91,15 @@ export default function Registration() {
     } else {
       setPhoneError(false);
       setPhoneErrorMessage("");
+    }
+
+    if (!email) {
+      setEmailError(true);
+      setEmailErrorMessage("Please enter your email address");
+      isValid = false;
+    } else {
+      setEmailError(false);
+      setEmailErrorMessage("");
     }
 
     if (!selectedOffice) {
@@ -135,9 +147,8 @@ export default function Registration() {
             body: JSON.stringify({
               mobile_number: phone,
               password: password,
-              "email": "example@gmail.com",
-              "last_name": ".",
-              first_name: name,
+              email: email,
+              full_name: name,
               office_id: selectedOffice.id,
               designation: designation,
             }),
@@ -204,6 +215,17 @@ export default function Registration() {
             onChange={(e) => setPhone(e.target.value)}
             error={phoneError}
             helperText={phoneErrorMessage}
+          />
+        </Box>
+        <Box sx={{ width: 500, maxWidth: "100%" }}>
+          <TextField
+            type="email"
+            fullWidth
+            label="ইমেইল লিখুন"
+            value={email}
+            onChange={(e) => setEmial(e.target.value)}
+            error={emailError}
+            helperText={emailErrorMessage}
           />
         </Box>
 
@@ -319,7 +341,7 @@ export default function Registration() {
           variant="contained"
           onClick={validateInputs}
         >
-          <span className="custom-font text-xl">লগইন</span>
+          <span className="custom-font text-xl">রেজিস্ট্রেশান</span>
         </Button>
 
         <span className="text-center custom-font">

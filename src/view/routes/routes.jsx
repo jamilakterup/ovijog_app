@@ -9,6 +9,7 @@ import Registration from "../pages/login-registration/Registration";
 import TestLayout from "../layouts/TestLayout";
 import ViewComplain from "../pages/dashboard/complain/ViewComplain";
 import ProtectedRoute from "./ProtectedRoute";
+import UsersCard from "../pages/dashboard/users/UsersCard";
 
 
 const routes = createBrowserRouter([
@@ -44,19 +45,27 @@ const routes = createBrowserRouter([
     },
     {
         path: '/dashboard',
-        element: <DashboardLayout />,
+        element:<ProtectedRoute element={<DashboardLayout />}/> ,
         errorElement: '404',
         children: [
             {
                 path: 'home',
-                element: <ProtectedRoute element={<HomePage />} requiredRole="user" />
+                element: <ProtectedRoute element={<HomePage />}/>
             },
             {
                 path: 'complain-table',
-                element: <ProtectedRoute element={<ComplainTable />} requiredRole="admin" />
+                element: <ProtectedRoute element={<ComplainTable />} />
+            },
+            {
+                path: 'users',
+                element: <ProtectedRoute element={<UsersCard />} />
             }
         ]
-    }
+    },
+    {
+        path: '*',
+        element: '404',
+    },
 ]);
 
 export default routes;

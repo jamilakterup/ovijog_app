@@ -135,7 +135,7 @@ function ComplainPage() {
     setLoading(true);
     
     try {
-      const response = await fetch("http://114.130.119.192/api/complaints/", {
+      const response = await fetch("http://114.130.119.192/api/complaint/submit/", {
         method: "POST",
         body: JSON.stringify({
           "title": complain_title,

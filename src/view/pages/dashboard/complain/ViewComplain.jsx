@@ -41,7 +41,7 @@ function ViewComplain() {
         const data = await response.json();
         setDataArray(data); // Set the state with the actual data
       } catch (error) {
-        console.error("Error fetching data:", error);
+        // console.error("Error fetching data:", error);
       }
     };
 
