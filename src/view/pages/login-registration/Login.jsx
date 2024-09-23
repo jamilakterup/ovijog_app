@@ -102,34 +102,17 @@ export default function Login() {
     }
 
     try {
-      // const response = await fetch(
-      //   "http://114.130.119.192/api/users/login/",
-      //   {
-      //     method: "POST",
-      //     body: JSON.stringify({
-      //       mobile_number: phone,
-      //       password: password
-      //     }),
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //   }
-      // );
 
       const res = await login({
         mobile_number: phone,
         password: password
       })
       
-
-console.log(res, data)
-return;
-
-      if (!response.ok) {
+      if (!res.ok) {
         throw new Error("Network response was not ok");
       }
 
-      const result = await response.json();
+      const result = await res.json();
 
       if (result) {
         navigate(`/`);

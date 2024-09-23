@@ -8,6 +8,8 @@ import Login from "../pages/login-registration/Login";
 import Registration from "../pages/login-registration/Registration";
 import TestLayout from "../layouts/TestLayout";
 import ViewComplain from "../pages/dashboard/complain/ViewComplain";
+import ProtectedRoute from "./ProtectedRoute";
+
 
 const routes = createBrowserRouter([
     {
@@ -47,11 +49,11 @@ const routes = createBrowserRouter([
         children: [
             {
                 path: 'home',
-                element: <HomePage />
+                element: <ProtectedRoute element={<HomePage />} requiredRole="user" />
             },
             {
                 path: 'complain-table',
-                element: <ComplainTable />
+                element: <ProtectedRoute element={<ComplainTable />} requiredRole="admin" />
             }
         ]
     }
