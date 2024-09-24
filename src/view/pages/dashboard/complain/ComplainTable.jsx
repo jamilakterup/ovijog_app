@@ -19,7 +19,6 @@ function ComplainTable() {
   const [modalOpen, setModalOpen] = useState(false);
   const [complaintData, setComplaintData] = useState(null);
   const [rowModesModel, setRowModesModel] = useState({});
-  const [statusMap, setStatusMap] = useState({});
   const [statusOptions, setStatusOptions] = useState([]);
   const [usersOptions, setUsersOptions] = useState([]);
   const [officesOptions, setOfficesOptions] = useState([]);
@@ -46,12 +45,12 @@ function ComplainTable() {
     { field: "office_name", headerName: "দপ্তর", width: 300 },
     { field: "tracking_id", headerName: "ট্র্যাকিং নম্বর", width: 220 },
     {
-      field: "status",
+      field: "status_name",
       headerName: "স্ট্যাটাস",
       width: 200,
       renderCell: (params) => {
-        const statusName = statusMap[params.value];
-        const statusClass = getStatusClass(params.value); // Function to get the class based on status ID
+        const statusName = params.value;
+        const statusClass = getStatusClass(params.value);
 
         return (
           <span
@@ -86,17 +85,17 @@ function ComplainTable() {
               icon={<EditIcon />}
               label="Edit"
               className="textPrimary"
-              onClick={() => handleOpenModal(id)}
+              onClick={handleOpenModal}
               color="inherit"
             />
             <DetailsModal
               open={modalOpen}
               handleClose={handleCloseModal}
-              statusOptions={statusOptions}
-              usersOptions={usersOptions}
-              setUsersOptions={setUsersOptions}
-              officesOptions={officesOptions}
-              data={complaintData}
+              // statusOptions={statusOptions}
+              // usersOptions={usersOptions}
+              // setUsersOptions={setUsersOptions}
+              // officesOptions={officesOptions}
+              data={id}
             />
           </div>,
           <GridActionsCellItem
@@ -128,33 +127,37 @@ function ComplainTable() {
     navigate(`/complain-details/${id}`)
   }
 
-  const handleOpenModal = async (id) => {
-    try {
-      const {data:singleData}=useGetComplaintQuery(id);
-console.log(singleData)
-      // const response = await fetch(
-      //   `http://114.130.119.192/api/complaint/single/view/${id}/`
-      // );
-      // const data = await response.json();
-      setComplaintData(data);
-      setModalOpen(true);
+  const handleOpenModal=()=>{
+    setModalOpen(true)
+  }
 
-      if (data.office) {
-        const usersResponse = await axios.post("http://114.130.119.192/api/users/office/",{
-          "office_id":data.office
-        });
-        setUsersOptions(usersResponse.data);
-      }else{
-       // Fetch users data
-       const usersResponse = await axios.get(
-        "http://114.130.119.192/api/users/"
-      );
-      setUsersOptions(usersResponse.data);
-      }
-    } catch (error) {
-      console.error("Error fetching complaint data:", error);
-    }
-  };
+//   const handleOpenModal = async (id) => {
+//     try {
+//       const {data:singleData}=useGetComplaintQuery(id);
+// console.log(singleData)
+//       // const response = await fetch(
+//       //   `http://114.130.119.192/api/complaint/single/view/${id}/`
+//       // );
+//       // const data = await response.json();
+//       setComplaintData(data);
+//       setModalOpen(true);
+
+//       if (data.office) {
+//         const usersResponse = await axios.post("http://114.130.119.192/api/users/office/",{
+//           "office_id":data.office
+//         });
+//         setUsersOptions(usersResponse.data);
+//       }else{
+//        // Fetch users data
+//        const usersResponse = await axios.get(
+//         "http://114.130.119.192/api/users/"
+//       );
+//       setUsersOptions(usersResponse.data);
+//       }
+//     } catch (error) {
+//       console.error("Error fetching complaint data:", error);
+//     }
+//   };
 
   const handleCloseModal = () => {
     setModalOpen(false);

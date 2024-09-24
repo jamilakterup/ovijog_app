@@ -205,7 +205,7 @@ const complainSubmit = async (event) => {
   
   // Validate captcha
   if (!validateCaptcha(captchaValue)) {
-    setCaptchaError(true);
+    setCaptchaError(true); 
     return;
   }
 
