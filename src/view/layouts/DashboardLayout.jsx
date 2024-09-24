@@ -6,7 +6,7 @@ import { useState } from "react";
 
 function DashboardLayout() {
   const [isOpen, setIsOpen] = useState(false);
-
+console.log('first loading')
   return (
     <div>
       <DashboardNav isOpen={isOpen} setIsOpen={setIsOpen} />

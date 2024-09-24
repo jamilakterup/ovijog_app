@@ -97,8 +97,9 @@ export default function Login() {
 
 
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <CssBaseline enableColorScheme />
+    <section className="my-20">
+      <ThemeProvider theme={defaultTheme}>
+        <CssBaseline enableColorScheme />
         <Card variant="outlined">
           <h2 className="text-4xl custom-font">লগইন করুন</h2>
 
@@ -158,7 +159,7 @@ export default function Login() {
             disabled={isLoading}
           >
             {isLoading ? (
-              <SyncIcon className="animate-spin"/>
+              <SyncIcon className="animate-spin" />
             ) : (
               <span className="custom-font text-xl">লগইন</span>
             )}
@@ -175,6 +176,7 @@ export default function Login() {
             </Link>
           </span>
         </Card>
-    </ThemeProvider>
+      </ThemeProvider>
+    </section>
   );
 }

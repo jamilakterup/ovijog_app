@@ -3,7 +3,10 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 const baseQuery = fetchBaseQuery({
     baseUrl: 'http://114.130.119.192/api/',
     prepareHeaders: async (headers, { getState, endpoint }) => {
-        const token = getState()?.auth?.accessToken;
+        console.log('jamil')
+        const test=await getState();
+        console.log(test)
+        const token = await getState()?.auth?.accessToken;
         if (token) {
             headers.set("Authorization", `Bearer ${token}`);
         }

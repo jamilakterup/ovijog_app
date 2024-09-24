@@ -2,8 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import Box from "@mui/material/Box";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import SaveIcon from "@mui/icons-material/Save";
-import CancelIcon from "@mui/icons-material/Close";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import {
   DataGrid,
@@ -14,6 +12,7 @@ import {
 import DetailsModal from "./DetailsModal";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useGetComplaintQuery, useGetComplaintsQuery } from "../../../redux/complain/complainApi";
 
 function ComplainTable() {
   const [rows, setRows] = useState([]);
@@ -26,6 +25,7 @@ function ComplainTable() {
   const [officesOptions, setOfficesOptions] = useState([]);
   const scrollerRef = useRef(null);
   const navigate= useNavigate(null);
+  const {data,isLoading}=useGetComplaintsQuery();
 
   // Function to get the class based on status ID
   const getStatusClass = (statusId) => {
@@ -110,48 +110,7 @@ function ComplainTable() {
       },
     },
   ];
-
-  // fetch all complains status and users
-  useEffect(() => {
-    const token = localStorage.getItem('auth');
-    let parsedToken = null;
   
-    if (token) {
-      try {
-        parsedToken = JSON.parse(token);
-        // console.log('Access Token:', parsedToken.accessToken);
-        // console.log('User Info:', parsedToken.user);
-      } catch (error) {
-        // console.error('Error parsing token:', error);
-      }
-    }
-  
-    const fetchData = async () => {
-      if (parsedToken) { // Check if parsedToken is available
-        try {
-          // Fetch complaints data
-          const complaintsResponse = await axios.get(
-            "http://114.130.119.192/api/complaint/view/",
-            {
-              headers: {
-                Authorization: `Bearer ${parsedToken.accessToken}`,
-              },
-            }
-          );
-  
-          setRows(complaintsResponse.data);
-        } catch (error) {
-          console.error('Error fetching complaints:', error);
-        }
-      } else {
-        console.log('No valid token found.');
-      }
-    };
-  
-    fetchData(); // Call the fetchData function
-  }, []); // Empty dependency array to run once on mount
-  
-  // end fetch all complains status and users
 
   useEffect(() => {
     if (scrollerRef.current) {
@@ -171,10 +130,12 @@ function ComplainTable() {
 
   const handleOpenModal = async (id) => {
     try {
-      const response = await fetch(
-        `http://114.130.119.192/api/complaints/${id}/`
-      );
-      const data = await response.json();
+      const {data:singleData}=useGetComplaintQuery(id);
+console.log(singleData)
+      // const response = await fetch(
+      //   `http://114.130.119.192/api/complaint/single/view/${id}/`
+      // );
+      // const data = await response.json();
       setComplaintData(data);
       setModalOpen(true);
 
@@ -253,7 +214,7 @@ function ComplainTable() {
 
   const processRowUpdate = (newRow) => {
     const updatedRow = { ...newRow, isNew: false };
-    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+    setRows(data.map((row) => (row.id === newRow.id ? updatedRow : row)));
     return updatedRow;
   };
 
@@ -279,7 +240,7 @@ function ComplainTable() {
     >
       <h1 className="text-3xl font-semibold m-4 text-slate-800">অভিযোগ সমূহ:</h1>
       <DataGrid
-        rows={rows}
+        rows={data}
         columns={columns}
         editMode="row"
         rowModesModel={rowModesModel}
