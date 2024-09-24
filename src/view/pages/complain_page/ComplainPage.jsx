@@ -187,15 +187,22 @@ const complainSubmit = async (event) => {
   formData.append("content", complain_details);
   formData.append("complainer_info", complainer_info);
   
-  // Append files to FormData
-  files.forEach((fileObj) => {
-    formData.append("files[]", fileObj.file);
-  });
+  if (files.length > 0) {
+    formData.append("file", files[0].file); // Primary file
+    files.slice(1).forEach((fileObj, index) => {
+      formData.append(`additional_file_${index + 1}`, fileObj.file);
+    });
+  } else {
+    formData.append("file", null);
+  }
 
-
-  formData.append("office_id", selectedOffice ? selectedOffice.id : "");
-  formData.append("custom_office", custom_office_name);
-
+  if (selectedOffice && selectedOffice.id) {
+    formData.append("office_id", selectedOffice.id);
+  }
+  if (custom_office_name && custom_office_name !== "undefined") {
+    formData.append("custom_office", custom_office_name);
+  }
+  
   // Validate captcha
   if (!validateCaptcha(captchaValue)) {
     setCaptchaError(true);

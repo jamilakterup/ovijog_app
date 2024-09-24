@@ -46,20 +46,10 @@ function ComplainForm({
     setFiles(files.filter((file) => file.id !== id));
   };
 
-  const handleFileChange = (e, id) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (file.size > 10 * 1024 * 1024) {
-        toast.error("File size exceeds 10MB.");
-        e.target.value = null; // Clear the input
-      } else {
-        // Update the files state with the new file
-        setFiles((prev) => {
-          const updatedFiles = prev.filter((f) => f.id !== id);
-          return [...updatedFiles, { id, file }];
-        });
-      }
-    }
+  const handleFileChange = (event) => {
+    const selectedFiles = Array.from(event.target.files);
+    const newFiles = selectedFiles.map(file => ({ file }));
+    setFiles(prevFiles => [...prevFiles, ...newFiles]);
   };
 
   const handleCustomOfficeToggle = () => {
@@ -371,7 +361,6 @@ ComplainForm.propTypes = {
   setTitle: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   getSummary: PropTypes.func.isRequired,
-  files: PropTypes.file.isRequired,
   setFiles: PropTypes.func.isRequired,
 };
 
