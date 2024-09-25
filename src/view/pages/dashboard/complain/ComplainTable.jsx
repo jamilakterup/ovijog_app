@@ -12,11 +12,14 @@ import {
 import DetailsModal from "./DetailsModal";
 import { useNavigate } from "react-router-dom";
 import { useGetComplaintsQuery } from "../../../redux/complain/complainApi";
+import axios from "axios";
+
 
 function ComplainTable() {
   const [rows, setRows] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [complaintData, setComplaintData] = useState(null);
+  const [usersOptions, setUsersOptions] = useState(null);
   const [singleId, setSingleId] = useState(null);
   const [rowModesModel, setRowModesModel] = useState({});
   const scrollerRef = useRef(null);
@@ -74,7 +77,7 @@ function ComplainTable() {
             icon={<VisibilityIcon />}
             label="Show"
             className="textPrimary"
-            onClick={() => handleShowDetails(tracking_id)} // Pass tracking_id instead of id
+            onClick={() => handleShowDetails(tracking_id)}
             color="inherit"
           />,
           <div key={`edit-${id}`}>
@@ -88,10 +91,8 @@ function ComplainTable() {
             <DetailsModal
               open={modalOpen}
               handleClose={handleCloseModal}
-              // statusOptions={statusOptions}
-              // usersOptions={usersOptions}
-              // setUsersOptions={setUsersOptions}
-              // officesOptions={officesOptions}
+              usersOptions={usersOptions}
+              setUsersOptions={setUsersOptions}
               singleId={singleId}
             />
           </div>,
@@ -110,7 +111,7 @@ function ComplainTable() {
 
   useEffect(() => {
     if (scrollerRef.current) {
-      scrollerRef.current.scrollLeft = 0; // Scroll to the left
+      scrollerRef.current.scrollLeft = 0;
     }
   }, [rows]);
 
@@ -128,34 +129,6 @@ function ComplainTable() {
     setSingleId(id)
     setModalOpen(true)
   }
-
-//   const handleOpenModal = async (id) => {
-//     try {
-//       const {data:singleData}=useGetComplaintQuery(id);
-// console.log(singleData)
-//       // const response = await fetch(
-//       //   `http://114.130.119.192/api/complaint/single/view/${id}/`
-//       // );
-//       // const data = await response.json();
-//       setComplaintData(data);
-//       setModalOpen(true);
-
-//       if (data.office) {
-//         const usersResponse = await axios.post("http://114.130.119.192/api/users/office/",{
-//           "office_id":data.office
-//         });
-//         setUsersOptions(usersResponse.data);
-//       }else{
-//        // Fetch users data
-//        const usersResponse = await axios.get(
-//         "http://114.130.119.192/api/users/"
-//       );
-//       setUsersOptions(usersResponse.data);
-//       }
-//     } catch (error) {
-//       console.error("Error fetching complaint data:", error);
-//     }
-//   };
 
   const handleCloseModal = () => {
     setModalOpen(false);

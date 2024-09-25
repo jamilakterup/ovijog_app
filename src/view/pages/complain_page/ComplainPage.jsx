@@ -134,12 +134,10 @@ const complainSubmit = async (event) => {
   
 
   // Validate captcha
-  if (advanceShow) {
     if (!validateCaptcha(captchaValue)) {
       setCaptchaError(true); 
       return;
     }
-  }
 
   setLoading(true);
 

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import ictLogo from "../../../../assets/ict_logo.png";
-import banglaLogo from "../../../../assets/bangla.png";
+import banglaLogo from "../../../../assets/bangla.svg";
 
 function DashboardFooter() {
     return (

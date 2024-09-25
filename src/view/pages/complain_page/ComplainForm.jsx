@@ -104,6 +104,25 @@ function ComplainForm({
             ></textarea>
           </div>
 
+          <div className="my-3">
+            <label
+              htmlFor="complainer_info"
+              className="custom-font md:text-[18px] block mb-2 font-medium text-gray-900"
+            >
+              অভিযোগকারীর মোবাইল নম্বর
+            </label>
+            <input
+              disabled={hideInfo}
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              type="text"
+              id="complainer_info"
+              name="complainer_info"
+              className="bg-gray-50 border border-gray-300 text-gray-900 custom-font rounded-lg focus:ring-black-500 focus:border-black-500 block w-full p-2 hover:bg-gray-100"
+              placeholder="01xxxxxxxxx"
+            />
+          </div>
+
           <div>
             <Toaster />
             <label
@@ -160,6 +179,30 @@ function ComplainForm({
               <AddIcon />
             </Fab>
           </div>
+
+          <div className="mt-6 border border-gray-200/80 bg-gray-100/60 rounded-md p-3 w-1/3">
+              <div className="mb-2 flex gap-3">
+                <LoadCanvasTemplateNoReload />
+                <img
+                  src={reloadimg}
+                  alt="reload-captcha-image"
+                  className="w-9 h-9"
+                  onClick={() => reloadCaptcha()}
+                />
+              </div>
+              <input
+                type="text"
+                className="border border-gray-400 rounded-sm"
+                placeholder="Enter Captcha Value"
+                onChange={handleCaptchaChange}
+              />
+              <br />
+              {captchaError && (
+                <span className="text-red-500">
+                  Captcha is incorrect. Please try again.
+                </span>
+              )}
+            </div>
 
           <div className="flex items-center justify-end py-2 mt-5 gap-5">
             <button
@@ -306,7 +349,7 @@ function ComplainForm({
                   id="complainer_info"
                   name="complainer_info"
                   className="bg-gray-50 border border-gray-300 text-gray-900 custom-font rounded-lg focus:ring-black-500 focus:border-black-500 block w-full p-2 hover:bg-gray-100"
-                  placeholder="নাম, মোবাইল নাম্বার, ঠিকানা..."
+                  placeholder="নাম, মোবাইল নম্বর, ঠিকানা..."
                 />
               </div>
             </div>

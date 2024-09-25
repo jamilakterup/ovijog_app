@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import bccLogo from "../../assets/ovijog.png";
+import bccLogo from "../../assets/ovijog.svg";
 
 function NavBar() {
     return (
