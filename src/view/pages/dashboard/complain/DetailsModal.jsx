@@ -9,9 +9,9 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import {
   useGetComplaintQuery,
+  useGetOfficesQuery,
   useGetStatusQuery,
   useGetUsersByOfficeQuery,
   useSubmitComplaintProgressMutation,
@@ -35,51 +35,69 @@ const style = {
 const imageStyle = {
   width: "100px",
   height: "100px",
-  objectFit: "cover", // Ensures the image scales without distorting its aspect ratio
+  objectFit: "cover",
 };
 
 function DetailsModal({ open, handleClose, singleId }) {
-  const { data } = useGetComplaintQuery(singleId);
-  const { data: usersOptions } = useGetUsersByOfficeQuery(data?.office || null);
+  const { data: complaintData, error, isLoading } = useGetComplaintQuery(singleId);
+  const { data: offices } = useGetOfficesQuery();
   const { data: statusOptions } = useGetStatusQuery();
   const [submitComplaintProgress] = useSubmitComplaintProgressMutation();
 
   const [comment, setComment] = useState("");
-  const [selectedOffice, setSelectedOffice] = useState("");
-  const [offices, setOffices] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(usersOptions);
-  const [selectedStatus, setSelectedStatus] = useState("");
+  const [selectedOffice, setSelectedOffice] = useState(complaintData?.office || "");
+  const [selectedUser, setSelectedUser] = useState(complaintData?.assigned_person_id || "");
+  const [usersOptions, setUsersOptions] = useState([]);
+  const [selectedStatus, setSelectedStatus] = useState(complaintData?.status || "");
+
+  useEffect(() => {
+    if (selectedOffice) {
+      const fetchUsers = async () => {
+        try {
+          const response = await fetch("http://114.130.119.192/api/users/office/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ office_id: selectedOffice }),
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch users");
+          }
+
+          const data = await response.json();
+          setUsersOptions(data);
+        } catch (error) {
+          console.error("Error fetching users:", error);
+        }
+      };
+
+      fetchUsers();
+    } else {
+      setUsersOptions([]); // Clear users if no office is selected
+    }
+  }, [selectedOffice]);
+
+  useEffect(() => {
+    // Reset users when the modal is opened or when the office changes
+    if (open) {
+      setSelectedOffice(complaintData?.office || "");
+      setSelectedUser(complaintData?.assigned_person_id || "");
+      setSelectedStatus(complaintData?.status || "");
+      setComment("");
+    }
+  }, [open, complaintData]);
 
   const handleCommentChange = (event) => {
     setComment(event.target.value);
   };
 
-  const handleOfficeChange = async (event) => {
-    await axios.post("http://114.130.119.192/api/users/office/", {
-      office_id: event.target.value,
-    });
+  const handleOfficeChange = (event) => {
     setSelectedOffice(event.target.value);
   };
 
-  useEffect(() => {
-    const fetchOffices = async () => {
-      try {
-        const response = await fetch("http://114.130.119.192/api/offices/");
-
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        setOffices(data);
-      } catch (error) {
-        console.error("Error fetching offices:", error);
-      }
-    };
-
-    fetchOffices();
-  }, [setOffices]);
-
-  const handleUserChange = async (event) => {
+  const handleUserChange = (event) => {
     setSelectedUser(event.target.value);
   };
 
@@ -89,31 +107,27 @@ function DetailsModal({ open, handleClose, singleId }) {
 
   const handleSubmitForm = async () => {
     try {
-      const response = await submitComplaintProgress(
-        {
-          tracking_id: data.tracking_id,
-          status_id: selectedStatus !== "" ? selectedStatus : data.status,
-          assigned_person_id: selectedUser,
-          assigned_office_id: selectedOffice,
-          comment: comment,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      ).unwrap();
+      const response = await submitComplaintProgress({
+        tracking_id: complaintData.tracking_id,
+        status_id: selectedStatus || complaintData.status,
+        assigned_person_id: selectedUser,
+        assigned_office_id: selectedOffice,
+        comment: comment,
+      }).unwrap();
 
       console.log("Form submitted successfully:", response);
       handleClose();
-
       window.location.reload();
     } catch (error) {
       console.error("Error submitting form:", error);
     }
   };
 
-  if (!data) {
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
     return;
   }
 
@@ -124,21 +138,15 @@ function DetailsModal({ open, handleClose, singleId }) {
       open={open}
       onClose={handleClose}
       closeAfterTransition
-      slots={{ backdrop: Backdrop }}
-      slotProps={{
-        backdrop: {
-          timeout: 500,
-        },
-      }}
+      BackdropComponent={Backdrop}
+      BackdropProps={{ timeout: 500 }}
     >
       <Fade in={open}>
         <Box sx={style}>
           <Box sx={{ gridColumn: "span 3" }}>
             <Typography id="transition-modal-title" variant="h6" component="h2">
               <span className="text-gray-600 custom-font">শিরোনাম: </span>
-              <span className="text-gray-700 custom-bold-font">
-                {data.title}
-              </span>
+              <span className="text-gray-700 custom-bold-font">{complaintData.title}</span>
             </Typography>
           </Box>
           <Box sx={{ gridColumn: "span 3", gap: "20px", display: "flex" }}>
@@ -149,7 +157,7 @@ function DetailsModal({ open, handleClose, singleId }) {
               component="h2"
             >
               <span className="text-gray-600 custom-font">বর্ণনা:</span> <br />
-              <span className="custom-font text-gray-800">{data.content}</span>
+              <span className="custom-font text-gray-800">{complaintData.content}</span>
             </Typography>
 
             <Box
@@ -160,36 +168,29 @@ function DetailsModal({ open, handleClose, singleId }) {
                 width: "800px",
               }}
             >
-              <Typography
-                id="transition-modal-title"
-                variant="h6"
-                component="h2"
-              >
+              <Typography id="transition-modal-title" variant="h6" component="h2">
                 <span className="custom-font text-gray-700">তথ্য:</span>
                 <div className="text-base text-gray-600 custom-font mb-1">
                   ট্র্যাকিং নম্বর:{" "}
-                  <span className="text-blue-700 font-semibold">
-                    {data.tracking_id}
-                  </span>
+                  <span className="text-blue-700 font-semibold">{complaintData.tracking_id}</span>
                 </div>
 
                 <div className="text-base text-gray-600 custom-font mb-1">
-                  জমার তারিখ:{" "}
-                  <span className="text-gray-700">{data.created_at}</span>
+                  জমার তারিখ: <span className="text-gray-700">{complaintData.created_at}</span>
                 </div>
 
                 <div className="text-base text-gray-600 custom-font mb-1">
                   অভিযোগকারীর তথ্য:{" "}
                   <span className="text-gray-700 custom-bold-font">
-                    {data.complainer_info || "বেনামি অভিযোগ"}
+                    {complaintData.complainer_info || "বেনামি অভিযোগ"}
                   </span>
                 </div>
 
                 <div className="text-base text-gray-600 custom-font mb-1">
                   সংযুক্ত ফাইল:{" "}
-                  {data.file && (
+                  {complaintData.file && (
                     <img
-                      src={data.file}
+                      src={complaintData.file}
                       alt="Complaint File"
                       style={imageStyle}
                     />
@@ -199,14 +200,8 @@ function DetailsModal({ open, handleClose, singleId }) {
             </Box>
 
             <Box sx={{ width: "600px" }}>
-              <Typography
-                id="transition-modal-title"
-                variant="h6"
-                component="h2"
-              >
-                <span className="custom-font text-gray-700">
-                  অ্যাসাইন/ফরওয়ার্ড করুন
-                </span>
+              <Typography id="transition-modal-title" variant="h6" component="h2">
+                <span className="custom-font text-gray-700">অ্যাসাইন/ফরওয়ার্ড করুন</span>
               </Typography>
 
               <div className="custom-font">
@@ -223,15 +218,15 @@ function DetailsModal({ open, handleClose, singleId }) {
                 sx={{ minWidth: 214, maxWidth: 214, marginTop: 2 }}
                 size="small"
               >
-                <InputLabel id="user-select-label">দপ্তর</InputLabel>
+                <InputLabel id="office-select-label">দপ্তর</InputLabel>
                 <Select
-                  labelId="user-select-label"
-                  id="user-select"
-                  value={selectedOffice || data.office}
+                  labelId="office-select-label"
+                  id="office-select"
+                  value={selectedOffice}
                   label="দপ্তর"
                   onChange={handleOfficeChange}
                 >
-                  {offices.map((office) => (
+                  {offices?.map((office) => (
                     <MenuItem key={office.id} value={office.id}>
                       {office.name_Bn}
                     </MenuItem>
@@ -243,9 +238,7 @@ function DetailsModal({ open, handleClose, singleId }) {
                 sx={{ minWidth: 214, maxWidth: 214, marginTop: 2 }}
                 size="small"
               >
-                <InputLabel id="user-select-label">
-                  দায়িত্বপ্রাপ্ত-কর্মকর্তা
-                </InputLabel>
+                <InputLabel id="user-select-label">দায়িত্বপ্রাপ্ত-কর্মকর্তা</InputLabel>
                 <Select
                   labelId="user-select-label"
                   id="user-select"
@@ -253,11 +246,15 @@ function DetailsModal({ open, handleClose, singleId }) {
                   label="দায়িত্বপ্রাপ্ত-কর্মকর্তা"
                   onChange={handleUserChange}
                 >
-                  {usersOptions.map((user) => (
-                    <MenuItem key={user.id} value={user.id}>
-                      {user.full_name}
-                    </MenuItem>
-                  ))}
+                  {usersOptions.length > 0 ? (
+                    usersOptions.map((user) => (
+                      <MenuItem key={user.id} value={user.id}>
+                        {user.full_name}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem disabled>No users available</MenuItem>
+                  )}
                 </Select>
               </FormControl>
 
@@ -265,15 +262,15 @@ function DetailsModal({ open, handleClose, singleId }) {
                 sx={{ marginTop: 2, minWidth: 214, maxWidth: 214 }}
                 size="small"
               >
-                <InputLabel id="demo-select-small-label">স্ট্যাটাস</InputLabel>
+                <InputLabel id="status-select-label">স্ট্যাটাস</InputLabel>
                 <Select
-                  labelId="demo-select-small-label"
-                  id="demo-select-small"
-                  value={selectedStatus || data.status}
-                  label="complain_status"
+                  labelId="status-select-label"
+                  id="status-select"
+                  value={selectedStatus}
+                  label="স্ট্যাটাস"
                   onChange={handleStatusChange}
                 >
-                  {statusOptions.map((status) => (
+                  {statusOptions?.map((status) => (
                     <MenuItem key={status.id} value={status.id}>
                       {status.name}
                     </MenuItem>
@@ -283,9 +280,7 @@ function DetailsModal({ open, handleClose, singleId }) {
             </Box>
           </Box>
 
-          <Box
-            sx={{ gridColumn: "span 3", textAlign: "end", marginTop: "30px" }}
-          >
+          <Box sx={{ gridColumn: "span 3", textAlign: "end", marginTop: "30px" }}>
             <Button onClick={handleSubmitForm} variant="contained">
               সাবমিট
             </Button>

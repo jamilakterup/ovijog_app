@@ -18,6 +18,10 @@ export const complainApi = apiSlice.injectEndpoints({
       }),
     }),
 
+    getOffices: builder.query({
+      query: () => "/offices/",  // Adjust the endpoint as needed
+    }),
+
     getStatus: builder.query({
       query: () => "/status/",
     }),
@@ -45,6 +49,7 @@ export const {
   useGetComplaintsQuery,
   useGetComplaintQuery,
   useGetUsersByOfficeQuery,
+  useGetOfficesQuery,  // Export the new hook
   useGetStatusQuery,
   useSubmitComplaintProgressMutation,
 } = complainApi;

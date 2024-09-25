@@ -52,7 +52,7 @@ function DashboardNav({ isOpen, setIsOpen }) {
           <Link to="/" className="flex items-center space-x-3 rtl:space-x-reverse">
             <img
               src={bccLogo}
-              className="h-12"
+              className="h-8"
               alt="BCC Logo"
             />
           </Link>

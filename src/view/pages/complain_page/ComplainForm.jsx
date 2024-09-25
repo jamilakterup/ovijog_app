@@ -180,30 +180,6 @@ function ComplainForm({
             </Fab>
           </div>
 
-          <div className="mt-6 border border-gray-200/80 bg-gray-100/60 rounded-md p-3 w-1/3">
-              <div className="mb-2 flex gap-3">
-                <LoadCanvasTemplateNoReload />
-                <img
-                  src={reloadimg}
-                  alt="reload-captcha-image"
-                  className="w-9 h-9"
-                  onClick={() => reloadCaptcha()}
-                />
-              </div>
-              <input
-                type="text"
-                className="border border-gray-400 rounded-sm"
-                placeholder="Enter Captcha Value"
-                onChange={handleCaptchaChange}
-              />
-              <br />
-              {captchaError && (
-                <span className="text-red-500">
-                  Captcha is incorrect. Please try again.
-                </span>
-              )}
-            </div>
-
           <div className="flex items-center justify-end py-2 mt-5 gap-5">
             <button
               onClick={() => setAdvanceShow(!advanceShow)}
