@@ -10,6 +10,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { useState } from "react";
 import axios from "axios";
+import { useGetComplaintQuery } from "../../../redux/complain/complainApi";
 
 const style = {
   position: "absolute",
@@ -32,7 +33,16 @@ const imageStyle = {
   objectFit: "cover", // Ensures the image scales without distorting its aspect ratio
 };
 
-function DetailsModal({ open, handleClose, data }) {
+function DetailsModal({ open, handleClose, singleId }) {
+const {data, isLoading}=useGetComplaintQuery(singleId)
+console.log('single data',data)
+if (isLoading) {
+  return <div>Loading...</div>;
+}
+
+if (!data) {
+  return <div>No data available</div>;
+}
 
   return (
     <Modal
@@ -51,10 +61,21 @@ function DetailsModal({ open, handleClose, data }) {
         <Fade in={open}>
           <Box sx={style}>
             <Typography id="transition-modal-title" variant="h6" component="h2">
-              Text in a modal {data}
+              <div>
+        <h1>{data.title}</h1>
+        <p>{data.content}</p>
+        {/* Render other properties as needed */}
+        <p>Status: {data.status_name}</p>
+        <p>Office: {data.office_name}</p>
+        {/* Add more fields as needed */}
+    </div>
             </Typography>
             <Typography id="transition-modal-description" sx={{ mt: 2 }}>
               Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+            </Typography>
+            <Typography id="transition-modal-description" sx={{ mt: 2 }}>
+              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati esse rerum voluptates, veritatis ullam cum, odit accusamus maiores iste quasi eum praesentium totam officia in perferendis necessitatibus aliquid ab fugit?
             </Typography>
           </Box>
         </Fade>

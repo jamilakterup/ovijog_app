@@ -10,18 +10,15 @@ import {
   GridRowEditStopReasons,
 } from "@mui/x-data-grid";
 import DetailsModal from "./DetailsModal";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useGetComplaintQuery, useGetComplaintsQuery } from "../../../redux/complain/complainApi";
+import { useGetComplaintsQuery } from "../../../redux/complain/complainApi";
 
 function ComplainTable() {
   const [rows, setRows] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [complaintData, setComplaintData] = useState(null);
+  const [singleId, setSingleId] = useState(null);
   const [rowModesModel, setRowModesModel] = useState({});
-  const [statusOptions, setStatusOptions] = useState([]);
-  const [usersOptions, setUsersOptions] = useState([]);
-  const [officesOptions, setOfficesOptions] = useState([]);
   const scrollerRef = useRef(null);
   const navigate= useNavigate(null);
   const {data,isLoading}=useGetComplaintsQuery();
@@ -85,7 +82,7 @@ function ComplainTable() {
               icon={<EditIcon />}
               label="Edit"
               className="textPrimary"
-              onClick={handleOpenModal}
+              onClick={()=>handleOpenModal(id)}
               color="inherit"
             />
             <DetailsModal
@@ -95,7 +92,7 @@ function ComplainTable() {
               // usersOptions={usersOptions}
               // setUsersOptions={setUsersOptions}
               // officesOptions={officesOptions}
-              data={id}
+              singleId={singleId}
             />
           </div>,
           <GridActionsCellItem
@@ -127,7 +124,8 @@ function ComplainTable() {
     navigate(`/complain-details/${id}`)
   }
 
-  const handleOpenModal=()=>{
+  const handleOpenModal=(id)=>{
+    setSingleId(id)
     setModalOpen(true)
   }
 

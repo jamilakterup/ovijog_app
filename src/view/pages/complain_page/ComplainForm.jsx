@@ -31,7 +31,7 @@ function ComplainForm({
   files,
   setFiles,
   advanceShow,
-  setAdvanceShow
+  setAdvanceShow,
 }) {
   const [inputs, setInputs] = useState([{ id: Date.now() }]);
   const [complainDetails, setComplainDetails] = useState("");
@@ -51,8 +51,8 @@ function ComplainForm({
 
   const handleFileChange = (event) => {
     const selectedFiles = Array.from(event.target.files);
-    const newFiles = selectedFiles.map(file => ({ id: Date.now(), file })); // Adding an id to each file
-    setFiles(prevFiles => [...prevFiles, ...newFiles]);
+    const newFiles = selectedFiles.map((file) => ({ id: Date.now(), file })); // Adding an id to each file
+    setFiles((prevFiles) => [...prevFiles, ...newFiles]);
   };
 
   const handleCustomOfficeToggle = () => {
@@ -143,8 +143,8 @@ function ComplainForm({
               </div>
             ))}
             <p className="text-xs text-gray-500 mb-2">
-              Accepted formats: jpg, jpeg, png, pdf, doc, docx, xls, xlsx,
-              mp4, avi (max 10MB)
+              Accepted formats: jpg, jpeg, png, pdf, doc, docx, xls, xlsx, mp4,
+              avi (max 10MB)
             </p>
             <Fab
               sx={{
@@ -162,7 +162,12 @@ function ComplainForm({
           </div>
 
           <div className="flex items-center justify-end py-2 mt-5 gap-5">
-            <button onClick={() => setAdvanceShow(!advanceShow)} className="bg-blue-700 p-3 rounded-md text-white">Advance option</button>
+            <button
+              onClick={() => setAdvanceShow(!advanceShow)}
+              className="bg-gray-500 p-3 rounded-md text-white"
+            >
+              Advance option
+            </button>
             <button
               type="submit"
               className="custom-bold-font md:text-[16px] py-3 px-4 text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800 text-center flex items-center justify-center"
@@ -180,7 +185,11 @@ function ComplainForm({
           </div>
         </div>
 
-        <div className={`${!advanceShow ? "hidden" : "grid"} md:grid-cols-3 md:gap-10`}>
+        <div
+          className={`${
+            !advanceShow ? "hidden" : "grid"
+          } md:grid-cols-3 md:gap-10`}
+        >
           {/* Left div */}
           <div className="md:col-span-2 md:me-20">
             <div>
@@ -318,7 +327,6 @@ function ComplainForm({
               </label>
             </div>
 
-
             {hideInfo && (
               <span className="text-sm custom-font text-red-500 block mb-2">
                 * মোবাইল নাম্বার এবং পূর্ণ নাম প্রদান না করলে অভিযোগটি
@@ -420,10 +428,16 @@ function ComplainForm({
               )}
             </div>
 
-            <div className="flex items-center justify-end py-2 mt-5">
+            <div className="flex items-center justify-end py-2 mt-5 gap-5">
+              <button
+                onClick={() => setAdvanceShow(!advanceShow)}
+                className="bg-gray-500 p-3 rounded-md text-white"
+              >
+                Minimal option
+              </button>
               <button
                 type="submit"
-                className="custom-bold-font md:text-[16px] py-3.5 px-4 text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800 w-full text-center flex items-center justify-center"
+                className="custom-bold-font md:text-[16px] py-3 px-4 text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800 text-center flex items-center justify-center w-1/2"
                 disabled={loading}
               >
                 {loading ? (
