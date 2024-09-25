@@ -18,7 +18,8 @@ function ComplainPage() {
   const [loading, setLoading] = useState(false);
   const [advanceShow, setAdvanceShow] = useState(false);
   const [error, setError] = useState('');
-  const navigate = useNavigate();
+  const [complainDetails, setComplainDetails] = useState("");
+  const navigate=useNavigate();
 
   const getSummary = async (event) => {
     const value = event.target.value;
@@ -103,14 +104,14 @@ const complainSubmit = async (event) => {
   // Retrieve values from the form
   const target = event.target;
   const complain_title = target.complain_title.value;
-  const complain_details = target.complain_details.value;
+  // const complain_details = target.complain_details.value;
   const complainer_info = target.complainer_info.value;
   const custom_office_name = target.custom_office?.value;
 
   // Create a FormData object
   const formData = new FormData();
   formData.append("title", complain_title);
-  formData.append("content", complain_details);
+  formData.append("content", complainDetails);
 
   if (complainer_info) {
     formData.append("complainer_info", complainer_info);
@@ -134,9 +135,11 @@ const complainSubmit = async (event) => {
   
 
   // Validate captcha
-    if (!validateCaptcha(captchaValue)) {
-      setCaptchaError(true); 
-      return;
+    if(advanceShow){
+      if (!validateCaptcha(captchaValue)) {
+        setCaptchaError(true); 
+        return;
+      }
     }
 
   setLoading(true);
@@ -188,6 +191,8 @@ const complainSubmit = async (event) => {
         setFiles={setFiles}
         advanceShow={advanceShow}
         setAdvanceShow={setAdvanceShow}
+        complainDetails={complainDetails}
+         setComplainDetails={setComplainDetails}
       />
     </>
   );

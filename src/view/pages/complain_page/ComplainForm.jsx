@@ -32,9 +32,10 @@ function ComplainForm({
   setFiles,
   advanceShow,
   setAdvanceShow,
+  complainDetails,
+  setComplainDetails
 }) {
   const [inputs, setInputs] = useState([{ id: Date.now() }]);
-  const [complainDetails, setComplainDetails] = useState("");
 
   const addInput = () => {
     if (inputs.length < 5) {
@@ -223,8 +224,8 @@ function ComplainForm({
                 id="complain_details"
                 name="complain_details"
                 rows="4"
-                value={complainDetails} // Bind the value to the state
-                onChange={handleComplainDetailsChange} // Update state on change
+                value={complainDetails}
+                onChange={handleComplainDetailsChange}
                 className="custom-font md:text-[16px] block p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 bg-gray-50"
                 placeholder="অভিযোগ সম্পর্কিত বিস্তারিত লিখুন..."
               ></textarea>
@@ -486,6 +487,8 @@ ComplainForm.propTypes = {
   setHideInfo: PropTypes.func.isRequired,
   inputValue: PropTypes.string.isRequired,
   setInputValue: PropTypes.func.isRequired,
+  complainDetails: PropTypes.string.isRequired,
+  setComplainDetails: PropTypes.func.isRequired,
   selectedOffice: PropTypes.object,
   setSelectedOffice: PropTypes.func.isRequired,
   complainSubmit: PropTypes.func.isRequired,
