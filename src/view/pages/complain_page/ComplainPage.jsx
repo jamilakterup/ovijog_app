@@ -16,6 +16,7 @@ function ComplainPage() {
   const [text, setText] = useState('');
   const [title, setTitle] = useState('');
   const [loading, setLoading] = useState(false);
+  const [advanceShow, setAdvanceShow] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -95,81 +96,6 @@ function ComplainPage() {
     setCaptchaValue(event.target.value);
   };
 
-  // submit the form on database:::::::
-//   const complainSubmit = async (event) => {
-//     event.preventDefault();
-// console.log(files)
-//     const target = event.target;
-//     const complain_title = target.complain_title.value;
-//     const complain_details = target.complain_details.value;
-//     const dropzone_file = target.dropzone_file.files[0]; // File object
-//     const complainer_info = target.complainer_info.value;
-//     const custom_office_name = target.custom_office?.value;
-
-    
-//     // Validate file extension
-//     const validExtensions = ["jpg", "jpeg", "png", "pdf", "mp4", "3gp"];
-//     if (dropzone_file) {
-//       const fileExtension = dropzone_file.name.split(".").pop().toLowerCase();
-//       if (!validExtensions.includes(fileExtension)) {
-//         alert(
-//           "Invalid file type. Please upload a jpg, jpeg, png, pdf, mp4, or 3gp file."
-//         );
-//         return;
-//       }
-
-//       // Optional: Validate file size (e.g., limit to 10MB)
-//       const maxSizeMB = 10;
-//       const maxSizeBytes = maxSizeMB * 1024 * 1024;
-//       if (dropzone_file.size > maxSizeBytes) {
-//         alert("File size exceeds 10MB.");
-//         return;
-//       }
-//     }
-
-
-//     if (validateCaptcha(captchaValue)) {
-//       setCaptchaError(false);
-//     } else {
-//       setCaptchaError(true);
-//       return;
-//     }
-//     setLoading(true);
-    
-//     try {
-//       const response = await fetch("http://114.130.119.192/api/complaint/submit/", {
-//         method: "POST",
-//         body: JSON.stringify({
-//           "title": complain_title,
-//           "content": complain_details,
-//           "complainer_info": complainer_info,
-//           "file": dropzone_file,
-//           "office_id": selectedOffice ? selectedOffice.id : "",
-//           "custom_office": custom_office_name,
-//         }),
-//         headers: {
-//           'Content-Type': 'application/json'
-//         }
-//       });
-
-//       if (!response.ok) {
-//         throw new Error("Network response was not ok");
-//       }
-
-//       const result = await response.json();
-
-//       if (result) {
-//         navigate(`/tracking/${result.tracking_id}`);
-//       }
-//     } catch (error) {
-//       console.error("Error:", error);
-//       // Handle error (e.g., show an error message)
-//     }
-//     finally{
-//       setLoading(false);
-//     }
-//   };
-
 
 const complainSubmit = async (event) => {
   event.preventDefault();
@@ -185,7 +111,10 @@ const complainSubmit = async (event) => {
   const formData = new FormData();
   formData.append("title", complain_title);
   formData.append("content", complain_details);
-  formData.append("complainer_info", complainer_info);
+
+  if (complainer_info) {
+    formData.append("complainer_info", complainer_info);
+  }
   
   if (files.length > 0) {
     formData.append("file", files[0].file); // Primary file
@@ -203,10 +132,13 @@ const complainSubmit = async (event) => {
     formData.append("custom_office", custom_office_name);
   }
   
+
   // Validate captcha
-  if (!validateCaptcha(captchaValue)) {
-    setCaptchaError(true); 
-    return;
+  if (advanceShow) {
+    if (!validateCaptcha(captchaValue)) {
+      setCaptchaError(true); 
+      return;
+    }
   }
 
   setLoading(true);
@@ -256,6 +188,8 @@ const complainSubmit = async (event) => {
         setOfficeName={setOfficeName}
         files={files}
         setFiles={setFiles}
+        advanceShow={advanceShow}
+        setAdvanceShow={setAdvanceShow}
       />
     </>
   );
