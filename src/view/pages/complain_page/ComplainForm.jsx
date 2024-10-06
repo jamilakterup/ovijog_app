@@ -69,12 +69,16 @@ function ComplainForm({
 
   const handleComplainDetailsChange = (event) => {
     setComplainDetails(event.target.value);
-    getSummary(event); // Call getSummary whenever the complain details change
+    // getSummary(event);
   };
+
+  const handleSummariser=(event)=>{
+    getSummary(event);
+  }
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    complainSubmit(event, files); // Pass the files to the submit handler
+    complainSubmit(event, files);
   };
 
   return (
@@ -98,8 +102,9 @@ function ComplainForm({
               id="complain_details"
               name="complain_details"
               rows="4"
-              value={complainDetails} // Bind the value to the state
-              onChange={handleComplainDetailsChange} // Update state on change
+              value={complainDetails}
+              onChange={handleComplainDetailsChange}
+              onBlur={handleSummariser}
               className="custom-font md:text-[16px] block p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 bg-gray-50"
               placeholder="অভিযোগ সম্পর্কিত বিস্তারিত লিখুন..."
             ></textarea>
@@ -226,6 +231,7 @@ function ComplainForm({
                 rows="4"
                 value={complainDetails}
                 onChange={handleComplainDetailsChange}
+                onBlur={handleSummariser}
                 className="custom-font md:text-[16px] block p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 bg-gray-50"
                 placeholder="অভিযোগ সম্পর্কিত বিস্তারিত লিখুন..."
               ></textarea>
